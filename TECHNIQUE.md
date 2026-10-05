@@ -62,6 +62,16 @@ les limites de l'intégration officielle dans `custom_packages/freebox.yaml` :
 - compteurs hebdomadaires (`utility_meter`) et statistiques sur 24 h ;
 - templates `*_speed_mb` pour l'historique (les vitesses brutes sont exclues du recorder).
 
-Objectif : exposer directement les compteurs cumulés de la box (capteurs
-`total_increasing`) pour supprimer ces calculs, puis reporter les `entity_id` dans les
-tableaux de bord, les automations et les filtres du recorder.
+Les compteurs cumulés de la box sont exposés : capteurs « Données reçues » /
+« Données envoyées » (`bytes_down` / `bytes_up`, octets depuis le démarrage de la box,
+`total_increasing`, affichés en Go). Correspondance pour la migration :
+
+| Aujourd'hui (`freebox.yaml`) | Remplacement |
+|---|---|
+| `sensor.freebox_*_volume_total` (intégration des débits) | « Données reçues / envoyées » : les vrais compteurs, sans dérive d'intégration |
+| `utility_meter` `download_hebdo` / `upload_hebdo` | même `utility_meter`, avec pour source les nouveaux capteurs |
+| templates `MB Received/Sent Weekly` | unité d'affichage du `utility_meter` (Mo) dans les réglages de l'entité |
+| templates `*_speed_mb` (Mbit/s) | unité d'affichage des capteurs de débit (`data_rate`, convertible en Mbit/s) |
+
+Restent ensuite à reporter les `entity_id` dans les tableaux de bord, les automations et les
+filtres du recorder.

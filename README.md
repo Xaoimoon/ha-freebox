@@ -18,6 +18,8 @@ problème de permission.
 Un appareil pour la Freebox, avec :
 
 - débits montant et descendant (ko/s) ;
+- **volumes de données reçues et envoyées** : les compteurs cumulés de la box (en Go, état
+  `total_increasing`), utilisables directement par les `utility_meter` et les statistiques ;
 - températures et ventilateurs annoncés par la box (diagnostic) ;
 - appels manqués non lus, et un bouton pour marquer le journal d'appels comme lu ;
 - un bouton de redémarrage et un interrupteur pour le Wi-Fi de la box ;

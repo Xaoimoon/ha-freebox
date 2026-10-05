@@ -43,6 +43,12 @@
       }
     },
     "sensor": {
+      "bytes_down": {
+        "name": "Data received"
+      },
+      "bytes_up": {
+        "name": "Data sent"
+      },
       "missed": {
         "name": "Missed calls"
       },

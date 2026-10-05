@@ -72,6 +72,12 @@ async def test_sensors_match_core_integration():
     # Débits en ko/s, comme l'intégration officielle.
     assert by_id[f"{MAC} rate_down"].native_value == 425.01
     assert by_id[f"{MAC} rate_up"].native_value == 9.57
+    # Volumes cumulés : octets bruts de la box, affichés en Go.
+    bytes_down = by_id[f"{MAC} bytes_down"]
+    assert bytes_down.native_value == 6081198020471
+    assert bytes_down.state_class == "total_increasing"
+    assert bytes_down.native_unit_of_measurement == "B"
+    assert by_id[f"{MAC} bytes_up"].native_value == 463495916561
     # Températures et ventilateur, noms fournis par la box.
     cpu0 = by_id[f"{MAC} temp_cpu0"]
     assert cpu0.native_value == 57
@@ -148,6 +154,8 @@ def test_translations_cover_entities_and_match():
     for platform, key in [
         ("sensor", "rate_down"),
         ("sensor", "rate_up"),
+        ("sensor", "bytes_down"),
+        ("sensor", "bytes_up"),
         ("sensor", "missed"),
         ("sensor", "partition_free_space"),
         ("button", "mark_calls_as_read"),

@@ -1,4 +1,4 @@
-"""Capteurs Freebox OS : débits, températures, ventilateurs, appels, disques."""
+"""Capteurs Freebox OS : débits, volumes cumulés, températures, ventilateurs, appels, disques."""
 
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ from homeassistant.const import (
     REVOLUTIONS_PER_MINUTE,
     EntityCategory,
     UnitOfDataRate,
+    UnitOfInformation,
     UnitOfTemperature,
 )
 from homeassistant.core import HomeAssistant
@@ -50,6 +51,29 @@ CONNECTION_SENSORS: tuple[FreeboxSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfDataRate.KILOBYTES_PER_SECOND,
         value_fn=lambda data: round(data.connection["rate_up"] / 1000, 2),
+    ),
+    # Compteurs cumulés de la box depuis son dernier démarrage : remis à zéro
+    # au redémarrage, ce que `total_increasing` traite comme un nouveau cycle.
+    # Utilisables tels quels par les `utility_meter` et les statistiques.
+    FreeboxSensorEntityDescription(
+        key="bytes_down",
+        translation_key="bytes_down",
+        device_class=SensorDeviceClass.DATA_SIZE,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        native_unit_of_measurement=UnitOfInformation.BYTES,
+        suggested_unit_of_measurement=UnitOfInformation.GIGABYTES,
+        suggested_display_precision=2,
+        value_fn=lambda data: data.connection["bytes_down"],
+    ),
+    FreeboxSensorEntityDescription(
+        key="bytes_up",
+        translation_key="bytes_up",
+        device_class=SensorDeviceClass.DATA_SIZE,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        native_unit_of_measurement=UnitOfInformation.BYTES,
+        suggested_unit_of_measurement=UnitOfInformation.GIGABYTES,
+        suggested_display_precision=2,
+        value_fn=lambda data: data.connection["bytes_up"],
     ),
 )
 

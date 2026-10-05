@@ -6,6 +6,15 @@
       }
     },
     "sensor": {
+      "bytes_down": {
+        "default": "mdi:download"
+      },
+      "bytes_up": {
+        "default": "mdi:upload"
+      },
+      "fan_speed": {
+        "default": "mdi:fan"
+      },
       "missed": {
         "default": "mdi:phone-missed"
       },
@@ -17,9 +26,6 @@
       },
       "rate_up": {
         "default": "mdi:upload-network"
-      },
-      "fan_speed": {
-        "default": "mdi:fan"
       }
     },
     "switch": {
