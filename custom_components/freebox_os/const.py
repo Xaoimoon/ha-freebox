@@ -39,3 +39,10 @@ WIFI_CONFIG_ENDPOINT = "wifi/config/"
 CALL_LOG_ENDPOINT = "call/log/"
 CALL_LOG_MARK_READ_ENDPOINT = "call/log/mark_all_as_read/"
 SYSTEM_REBOOT_ENDPOINT = "system/reboot/"
+NETWORK_CONTROL_ENDPOINT = "network_control/"
+
+# Modes d'accès d'un profil de contrôle parental (`webonly` : ancien mode,
+# que Freebox OS n'accepte plus en écriture).
+ACCESS_ALLOWED = "allowed"
+ACCESS_DENIED = "denied"
+ACCESS_WEBONLY = "webonly"

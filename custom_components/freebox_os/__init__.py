@@ -8,8 +8,9 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
-from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import config_validation as cv, device_registry as dr
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.typing import ConfigType
 
 from .api import (
     FreeboxApiClient,
@@ -21,6 +22,10 @@ from .api import (
 from .const import APP_ID, CONF_APP_TOKEN, DOMAIN  # noqa: F401
 from .coordinator import FreeboxDataUpdateCoordinator
 from .entity import router_device_info
+from .parental import profile_identifier
+from .services import async_setup_services
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 PLATFORMS: list[Platform] = [
     Platform.BUTTON,
@@ -39,6 +44,12 @@ class FreeboxRuntimeData:
 
 
 type FreeboxConfigEntry = ConfigEntry[FreeboxRuntimeData]
+
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Enregistre les actions du contrôle parental (une fois pour toutes les box)."""
+    async_setup_services(hass)
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: FreeboxConfigEntry) -> bool:
@@ -81,3 +92,21 @@ async def async_unload_entry(hass: HomeAssistant, entry: FreeboxConfigEntry) -> 
     if unloaded:
         await entry.runtime_data.api.close_session()
     return unloaded
+
+
+async def async_remove_config_entry_device(
+    hass: HomeAssistant, entry: FreeboxConfigEntry, device_entry: dr.DeviceEntry
+) -> bool:
+    """Autorise la suppression d'un appareil disparu de la box (profil supprimé
+    dans Freebox OS, disque retiré) ; la box elle-même et ce qui existe encore
+    reviendraient de toute façon.
+    """
+    runtime_data = getattr(entry, "runtime_data", None)
+    if runtime_data is None:
+        return False
+    data = runtime_data.coordinator.data
+    mac = data.system["mac"]
+    live = {mac}
+    live |= {profile_identifier(mac, profile_id) for profile_id in data.profiles or {}}
+    live |= {f"{mac}_disk_{disk_id}" for disk_id in data.disks}
+    return not any(domain == DOMAIN and ident in live for domain, ident in device_entry.identifiers)

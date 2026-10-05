@@ -16,7 +16,7 @@
       },
       "link": {
         "title": "Pair the {name}",
-        "description": "Select **Submit**, then accept Home Assistant's access request on the Freebox display (right arrow).\n\nThen, in Freebox OS (Freebox settings › Access management › Applications), grant the app the **Freebox settings modification** permission for reboot and Wi-Fi, and **Calls manager access** for the call log."
+        "description": "Select **Submit**, then accept Home Assistant's access request on the Freebox display (right arrow).\n\nThen, in Freebox OS (Freebox settings › Access management › Applications), grant the app the **Freebox settings modification** permission for reboot and Wi-Fi, , **Calls manager access** for the call log and **Parental control access** for the profiles."
       }
     },
     "progress": {
@@ -40,17 +40,34 @@
     "button": {
       "mark_calls_as_read": {
         "name": "Mark calls as read"
+      },
+      "resume_schedule": {
+        "name": "Resume schedule"
       }
     },
     "sensor": {
+      "access_mode": {
+        "name": "Mode",
+        "state": {
+          "allowed": "Allowed",
+          "denied": "Blocked",
+          "webonly": "Web only"
+        }
+      },
       "bytes_down": {
         "name": "Data received"
       },
       "bytes_up": {
         "name": "Data sent"
       },
+      "connected_devices": {
+        "name": "Connected devices"
+      },
       "missed": {
         "name": "Missed calls"
+      },
+      "next_change": {
+        "name": "Next change"
       },
       "partition_free_space": {
         "name": "{partition} free space"
@@ -63,9 +80,54 @@
       }
     },
     "switch": {
+      "internet_access": {
+        "name": "Internet access",
+        "state_attributes": {
+          "manual": {
+            "name": "Manual mode"
+          },
+          "manual_until": {
+            "name": "Manual mode until"
+          },
+          "schedule_mode": {
+            "name": "Scheduled mode"
+          }
+        }
+      },
       "wifi": {
         "name": "Wi-Fi"
       }
+    }
+  },
+  "services": {
+    "block_internet": {
+      "name": "Block Internet access",
+      "description": "Cuts Internet access for the devices of a parental control profile, for a while or until further notice.",
+      "fields": {
+        "duration": {
+          "name": "Duration",
+          "description": "How long to block. Without a duration, until access is allowed again."
+        }
+      }
+    },
+    "allow_internet": {
+      "name": "Allow Internet access",
+      "description": "Restores Internet access for a parental control profile, even if its schedule blocks it.",
+      "fields": {
+        "duration": {
+          "name": "Duration",
+          "description": "How long to allow. Without a duration, until the next change planned by the schedule."
+        }
+      }
+    },
+    "resume_schedule": {
+      "name": "Resume schedule",
+      "description": "Ends a manual pause or allowance: the profile's schedule applies again."
+    }
+  },
+  "exceptions": {
+    "not_a_profile": {
+      "message": "{entity_id} is not the Internet access of a parental control profile"
     }
   }
 }

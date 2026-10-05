@@ -27,6 +27,38 @@ Un appareil pour la Freebox, avec :
 
 Un appareil par disque, avec l'espace libre de chaque partition.
 
+### Contrôle parental
+
+Chaque profil créé dans Freebox OS (**Paramètres de la Freebox > Contrôle parental**) devient
+un appareil dans Home Assistant, sans rien configurer : un profil ajouté plus tard apparaît tout
+seul, un profil supprimé peut ensuite être retiré de Home Assistant. Pour chaque profil :
+
+| Entité | Rôle |
+|---|---|
+| **Accès Internet** (interrupteur) | Éteint : coupe Internet jusqu'à nouvel ordre. Allumé : rétablit l'accès, jusqu'au prochain changement prévu par le planning du profil. |
+| **Mode** | Autorisé ou Bloqué, tel qu'appliqué en ce moment par la box. |
+| **Prochain changement** | Fin d'une pause, ou prochain changement du planning. |
+| **Appareils connectés** | Nombre d'appareils du profil en ligne ; la liste complète est en attribut. |
+| **Reprendre le planning** (bouton) | Annule une pause ou une autorisation manuelle. |
+
+Pour une durée, les actions **`freebox_os.block_internet`** et **`freebox_os.allow_internet`**
+acceptent un champ `duration` ; **`freebox_os.resume_schedule`** rend la main au planning. Elles
+ciblent l'interrupteur « Accès Internet » d'un ou plusieurs profils :
+
+```yaml
+# Couper Internet pendant le dîner
+action: freebox_os.block_internet
+target:
+  entity_id: switch.alice_acces_internet
+data:
+  duration: "01:00:00"
+```
+
+Les horaires réguliers restent à régler dans le planning du profil, dans Freebox OS : Home
+Assistant sert aux exceptions (punition, devoirs, repas…).
+
+### Présence
+
 Un traceur de présence (`device_tracker`) par appareil vu sur le réseau local, désactivé par
 défaut sauf si Home Assistant connaît déjà un appareil avec la même adresse MAC.
 
@@ -49,7 +81,8 @@ défaut sauf si Home Assistant connaît déjà un appareil avec la même adresse
 4. Dans Freebox OS (**Paramètres de la Freebox > Gestion des accès > Applications**), accorder à
    l'application « Home Assistant (Freebox OS) » :
    - **Modification des réglages de la Freebox** : redémarrage et Wi-Fi ;
-   - **Accès au gestionnaire d'appels** : journal d'appels.
+   - **Accès au gestionnaire d'appels** : journal d'appels ;
+   - **Accès au contrôle parental** : profils de contrôle parental.
 
    Sans ces droits, les entités concernées ne sont pas créées.
 

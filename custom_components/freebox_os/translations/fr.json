@@ -16,7 +16,7 @@
       },
       "link": {
         "title": "Appairer la {name}",
-        "description": "Sélectionnez **Valider**, puis acceptez la demande d'accès de Home Assistant sur l'écran de la Freebox (flèche de droite).\n\nEnsuite, dans Freebox OS (Paramètres de la Freebox › Gestion des accès › Applications), accordez à l'application le droit **Modification des réglages de la Freebox** pour le redémarrage et le Wi-Fi, et **Accès au gestionnaire d'appels** pour le journal d'appels."
+        "description": "Sélectionnez **Valider**, puis acceptez la demande d'accès de Home Assistant sur l'écran de la Freebox (flèche de droite).\n\nEnsuite, dans Freebox OS (Paramètres de la Freebox › Gestion des accès › Applications), accordez à l'application le droit **Modification des réglages de la Freebox** pour le redémarrage et le Wi-Fi, , **Accès au gestionnaire d'appels** pour le journal d'appels et **Accès au contrôle parental** pour les profils."
       }
     },
     "progress": {
@@ -40,17 +40,34 @@
     "button": {
       "mark_calls_as_read": {
         "name": "Marquer les appels comme lus"
+      },
+      "resume_schedule": {
+        "name": "Reprendre le planning"
       }
     },
     "sensor": {
+      "access_mode": {
+        "name": "Mode",
+        "state": {
+          "allowed": "Autorisé",
+          "denied": "Bloqué",
+          "webonly": "Web seulement"
+        }
+      },
       "bytes_down": {
         "name": "Données reçues"
       },
       "bytes_up": {
         "name": "Données envoyées"
       },
+      "connected_devices": {
+        "name": "Appareils connectés"
+      },
       "missed": {
         "name": "Appels manqués"
+      },
+      "next_change": {
+        "name": "Prochain changement"
       },
       "partition_free_space": {
         "name": "Espace libre {partition}"
@@ -63,9 +80,54 @@
       }
     },
     "switch": {
+      "internet_access": {
+        "name": "Accès Internet",
+        "state_attributes": {
+          "manual": {
+            "name": "Mode manuel"
+          },
+          "manual_until": {
+            "name": "Mode manuel jusqu'à"
+          },
+          "schedule_mode": {
+            "name": "Mode prévu par le planning"
+          }
+        }
+      },
       "wifi": {
         "name": "Wi-Fi"
       }
+    }
+  },
+  "services": {
+    "block_internet": {
+      "name": "Bloquer l'accès à Internet",
+      "description": "Coupe l'accès à Internet des appareils d'un profil de contrôle parental, pour une durée ou jusqu'à nouvel ordre.",
+      "fields": {
+        "duration": {
+          "name": "Durée",
+          "description": "Durée du blocage. Sans durée, le blocage dure jusqu'à ce que l'accès soit rétabli."
+        }
+      }
+    },
+    "allow_internet": {
+      "name": "Autoriser l'accès à Internet",
+      "description": "Rétablit l'accès à Internet d'un profil de contrôle parental, même si son planning le bloque.",
+      "fields": {
+        "duration": {
+          "name": "Durée",
+          "description": "Durée de l'autorisation. Sans durée, jusqu'au prochain changement prévu par le planning."
+        }
+      }
+    },
+    "resume_schedule": {
+      "name": "Reprendre le planning",
+      "description": "Termine une pause ou une autorisation manuelle : le planning du profil s'applique de nouveau."
+    }
+  },
+  "exceptions": {
+    "not_a_profile": {
+      "message": "{entity_id} n'est pas l'accès Internet d'un profil de contrôle parental"
     }
   }
 }

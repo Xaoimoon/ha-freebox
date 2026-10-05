@@ -1,0 +1,143 @@
+{
+  "success": true,
+  "result": [
+    {
+      "override_mode": "allowed",
+      "profile_id": 1,
+      "cdayranges": [
+        ":fr_school_holidays_b"
+      ],
+      "resolution": 48,
+      "profile_name": "Alice",
+      "current_mode": "allowed",
+      "macs": [
+        "00:00:5E:00:53:21",
+        "00:00:5E:00:53:22"
+      ],
+      "next_change": 1791234000,
+      "override": false,
+      "rule_mode": "allowed",
+      "profile_icon": "/resources/images/profile/profile_00.png",
+      "override_until": null,
+      "hosts": [
+        {
+          "l2ident": {
+            "id": "00:00:5E:00:53:21",
+            "type": "mac_address"
+          },
+          "active": true,
+          "persistent": true,
+          "names": [
+            {
+              "name": "Tab-Alice",
+              "source": "dhcp"
+            }
+          ],
+          "vendor_name": "Example",
+          "host_type": "tablet",
+          "domain_name": "tab-alice.home",
+          "info": {},
+          "l3connectivities": [],
+          "id": "ether-00:00:5e:00:53:21",
+          "last_time_reachable": 1791232753,
+          "primary_name_manual": false,
+          "network_control": {
+            "current_mode": "allowed",
+            "profile_id": 1,
+            "name": "Alice"
+          },
+          "interface": "pub",
+          "default_name": "Tab-Alice",
+          "first_activity": 1774432518,
+          "reachable": true,
+          "last_activity": 1791232753,
+          "primary_name": "Tab-Alice"
+        },
+        {
+          "l2ident": {
+            "id": "00:00:5E:00:53:22",
+            "type": "mac_address"
+          },
+          "active": false,
+          "persistent": true,
+          "names": [
+            {
+              "name": "PC-Alice",
+              "source": "dhcp"
+            }
+          ],
+          "vendor_name": "Example",
+          "host_type": "workstation",
+          "domain_name": "pc-alice.home",
+          "info": {},
+          "l3connectivities": [],
+          "id": "ether-00:00:5e:00:53:22",
+          "last_time_reachable": 1791232753,
+          "primary_name_manual": false,
+          "network_control": {
+            "current_mode": "allowed",
+            "profile_id": 1,
+            "name": "Alice"
+          },
+          "interface": "pub",
+          "default_name": "PC-Alice",
+          "first_activity": 1774432518,
+          "reachable": false,
+          "last_activity": 1791232753,
+          "primary_name": "PC-Alice"
+        }
+      ]
+    },
+    {
+      "override_mode": "allowed",
+      "profile_id": 2,
+      "cdayranges": [],
+      "resolution": 48,
+      "profile_name": "Bob",
+      "current_mode": "allowed",
+      "macs": [
+        "00:00:5E:00:53:23"
+      ],
+      "next_change": 0,
+      "override": true,
+      "rule_mode": "denied",
+      "profile_icon": "/resources/images/profile/profile_00.png",
+      "override_until": null,
+      "hosts": [
+        {
+          "l2ident": {
+            "id": "00:00:5E:00:53:23",
+            "type": "mac_address"
+          },
+          "active": false,
+          "persistent": true,
+          "names": [
+            {
+              "name": "Phone-Bob",
+              "source": "dhcp"
+            }
+          ],
+          "vendor_name": "Example",
+          "host_type": "smartphone",
+          "domain_name": "phone-bob.home",
+          "info": {},
+          "l3connectivities": [],
+          "id": "ether-00:00:5e:00:53:23",
+          "last_time_reachable": 1791232753,
+          "primary_name_manual": false,
+          "network_control": {
+            "current_mode": "allowed",
+            "profile_id": 2,
+            "name": "Bob"
+          },
+          "interface": "pub",
+          "default_name": "Phone-Bob",
+          "first_activity": 1774432518,
+          "reachable": false,
+          "last_activity": 1791232753,
+          "primary_name": "Phone-Bob"
+        }
+      ]
+    }
+  ]
+}

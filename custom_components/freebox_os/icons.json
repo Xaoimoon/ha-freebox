@@ -3,20 +3,36 @@
     "button": {
       "mark_calls_as_read": {
         "default": "mdi:phone-check"
+      },
+      "resume_schedule": {
+        "default": "mdi:calendar-sync"
       }
     },
     "sensor": {
+      "access_mode": {
+        "default": "mdi:shield-account",
+        "state": {
+          "denied": "mdi:shield-lock",
+          "allowed": "mdi:shield-check"
+        }
+      },
       "bytes_down": {
         "default": "mdi:download"
       },
       "bytes_up": {
         "default": "mdi:upload"
       },
+      "connected_devices": {
+        "default": "mdi:devices"
+      },
       "fan_speed": {
         "default": "mdi:fan"
       },
       "missed": {
         "default": "mdi:phone-missed"
+      },
+      "next_change": {
+        "default": "mdi:clock-outline"
       },
       "partition_free_space": {
         "default": "mdi:harddisk"
@@ -29,12 +45,29 @@
       }
     },
     "switch": {
+      "internet_access": {
+        "default": "mdi:web",
+        "state": {
+          "off": "mdi:web-off"
+        }
+      },
       "wifi": {
         "default": "mdi:wifi",
         "state": {
           "off": "mdi:wifi-off"
         }
       }
+    }
+  },
+  "services": {
+    "block_internet": {
+      "service": "mdi:web-off"
+    },
+    "allow_internet": {
+      "service": "mdi:web"
+    },
+    "resume_schedule": {
+      "service": "mdi:calendar-sync"
     }
   }
 }

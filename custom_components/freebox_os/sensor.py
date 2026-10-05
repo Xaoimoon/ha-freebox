@@ -1,4 +1,5 @@
-"""Capteurs Freebox OS : débits, volumes cumulés, températures, ventilateurs, appels, disques."""
+"""Capteurs Freebox OS : débits, volumes cumulés, températures, ventilateurs, appels,
+disques, profils de contrôle parental."""
 
 from __future__ import annotations
 
@@ -25,8 +26,10 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import dt as dt_util
 
 from . import FreeboxConfigEntry
+from .const import ACCESS_ALLOWED, ACCESS_DENIED, ACCESS_WEBONLY
 from .coordinator import FreeboxData, FreeboxDataUpdateCoordinator
 from .entity import FreeboxEntity, disk_device_info
+from .parental import FreeboxProfileEntity, async_track_profiles
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -139,6 +142,17 @@ async def async_setup_entry(
 
     async_add_entities(entities)
 
+    async_track_profiles(
+        entry,
+        coordinator,
+        async_add_entities,
+        lambda device_id, profile: [
+            FreeboxProfileModeSensor(coordinator, device_id, profile),
+            FreeboxProfileNextChangeSensor(coordinator, device_id, profile),
+            FreeboxProfileDevicesSensor(coordinator, device_id, profile),
+        ],
+    )
+
 
 class FreeboxSensor(FreeboxEntity, SensorEntity):
     entity_description: FreeboxSensorEntityDescription
@@ -240,3 +254,66 @@ class FreeboxPartitionSensor(FreeboxEntity, SensorEntity):
         if not partition or not partition.get("total_bytes"):
             return None
         return round(partition["free_bytes"] * 100 / partition["total_bytes"], 2)
+
+
+class FreeboxProfileModeSensor(FreeboxProfileEntity, SensorEntity):
+    """Mode d'accès en vigueur : autorisé, bloqué (ou l'ancien « web seulement »)."""
+
+    _attr_translation_key = "access_mode"
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = [ACCESS_ALLOWED, ACCESS_DENIED, ACCESS_WEBONLY]
+
+    def __init__(self, coordinator: FreeboxDataUpdateCoordinator, router_device_id: str, profile: dict[str, Any]) -> None:
+        super().__init__(coordinator, router_device_id, profile, "access_mode")
+
+    @property
+    def native_value(self) -> str | None:
+        mode = (self.profile or {}).get("current_mode")
+        return mode if mode in self._attr_options else None
+
+
+class FreeboxProfileNextChangeSensor(FreeboxProfileEntity, SensorEntity):
+    """Prochain changement de mode : fin d'une pause, début du prochain blocage
+    prévu… Inconnu quand rien n'est prévu."""
+
+    _attr_translation_key = "next_change"
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+
+    def __init__(self, coordinator: FreeboxDataUpdateCoordinator, router_device_id: str, profile: dict[str, Any]) -> None:
+        super().__init__(coordinator, router_device_id, profile, "next_change")
+
+    @property
+    def native_value(self):
+        next_change = (self.profile or {}).get("next_change") or 0
+        return dt_util.utc_from_timestamp(next_change) if next_change else None
+
+
+class FreeboxProfileDevicesSensor(FreeboxProfileEntity, SensorEntity):
+    """Nombre d'appareils du profil connectés en ce moment ; la liste complète
+    est en attribut."""
+
+    _attr_translation_key = "connected_devices"
+    _attr_state_class = SensorStateClass.MEASUREMENT
+
+    def __init__(self, coordinator: FreeboxDataUpdateCoordinator, router_device_id: str, profile: dict[str, Any]) -> None:
+        super().__init__(coordinator, router_device_id, profile, "connected_devices")
+
+    def _hosts(self) -> list[dict[str, Any]]:
+        return (self.profile or {}).get("hosts") or []
+
+    @property
+    def native_value(self) -> int:
+        return sum(1 for host in self._hosts() if host.get("active"))
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        return {
+            "devices": [
+                {
+                    "name": (host.get("primary_name") or "").strip() or host["l2ident"]["id"],
+                    "mac": host["l2ident"]["id"],
+                    "connected": bool(host.get("active")),
+                }
+                for host in self._hosts()
+            ]
+        }

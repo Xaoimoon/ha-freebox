@@ -1,0 +1,25 @@
+block_internet:
+  target:
+    entity:
+      integration: freebox_os
+      domain: switch
+  fields:
+    duration:
+      selector:
+        duration:
+
+allow_internet:
+  target:
+    entity:
+      integration: freebox_os
+      domain: switch
+  fields:
+    duration:
+      selector:
+        duration:
+
+resume_schedule:
+  target:
+    entity:
+      integration: freebox_os
+      domain: switch

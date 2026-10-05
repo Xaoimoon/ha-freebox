@@ -1,4 +1,4 @@
-"""Boutons Freebox OS : redémarrage, journal d'appels lu."""
+"""Boutons Freebox OS : redémarrage, journal d'appels lu, retour au planning d'un profil."""
 
 from __future__ import annotations
 
@@ -19,6 +19,7 @@ from . import FreeboxConfigEntry
 from .api import FreeboxApiClient, FreeboxApiError
 from .coordinator import FreeboxDataUpdateCoordinator
 from .entity import FreeboxEntity
+from .parental import FreeboxProfileEntity, async_track_profiles
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -55,6 +56,12 @@ async def async_setup_entry(
         for description in BUTTONS
         if not description.needs_calls or coordinator.data.calls is not None
     )
+    async_track_profiles(
+        entry,
+        coordinator,
+        async_add_entities,
+        lambda device_id, profile: [FreeboxProfileResumeButton(coordinator, device_id, profile)],
+    )
 
 
 class FreeboxButton(FreeboxEntity, ButtonEntity):
@@ -73,3 +80,20 @@ class FreeboxButton(FreeboxEntity, ButtonEntity):
             raise HomeAssistantError(f"Freebox : {err}") from err
         if self.entity_description.needs_calls:
             await self.coordinator.async_request_refresh()
+
+
+class FreeboxProfileResumeButton(FreeboxProfileEntity, ButtonEntity):
+    """Termine une pause ou un accès manuel : le planning du profil reprend la main.
+    Indisponible quand aucun mode manuel n'est en cours."""
+
+    _attr_translation_key = "resume_schedule"
+
+    def __init__(self, coordinator: FreeboxDataUpdateCoordinator, router_device_id: str, profile) -> None:
+        super().__init__(coordinator, router_device_id, profile, "resume_schedule")
+
+    @property
+    def available(self) -> bool:
+        return super().available and bool((self.profile or {}).get("override"))
+
+    async def async_press(self) -> None:
+        await self.async_resume_schedule()

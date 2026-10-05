@@ -30,6 +30,7 @@ from .const import (
     LOGIN_ENDPOINT,
     LOGIN_LOGOUT_ENDPOINT,
     LOGIN_SESSION_ENDPOINT,
+    NETWORK_CONTROL_ENDPOINT,
     STORAGE_DISK_ENDPOINT,
     STORAGE_RAID_ENDPOINT,
     SWITCH_STATUS_ENDPOINT,
@@ -47,6 +48,18 @@ REQUEST_TIMEOUT = aiohttp.ClientTimeout(total=10)
 _SESSION_ERRORS = {"auth_required", "invalid_session"}
 # Codes d'erreur à l'ouverture de session qui exigent un nouvel appairage.
 _TOKEN_ERRORS = {"invalid_token", "pending_token"}
+# Champs d'un profil de contrôle parental que la box attend à chaque PUT :
+# elle refuse une mise à jour partielle (« Liste d'adresses MAC manquante »).
+_PROFILE_FIELDS = (
+    "profile_name",
+    "profile_icon",
+    "override_mode",
+    "current_mode",
+    "override_until",
+    "override",
+    "macs",
+    "cdayranges",
+)
 
 
 class FreeboxApiError(Exception):
@@ -290,6 +303,19 @@ class FreeboxApiClient:
     async def mark_calls_as_read(self) -> None:
         """Marque tout le journal d'appels comme lu (droit `calls`)."""
         await self.request("POST", CALL_LOG_MARK_READ_ENDPOINT)
+
+    async def get_network_control(self) -> list[dict[str, Any]]:
+        """Profils de contrôle parental, avec leurs appareils (droit `parental`)."""
+        return await self.request("GET", NETWORK_CONTROL_ENDPOINT) or []
+
+    async def update_network_control(self, profile: dict[str, Any], **changes: Any) -> dict[str, Any]:
+        """Modifie un profil : renvoie le profil complet, avec les changements."""
+        body = {key: profile.get(key) for key in _PROFILE_FIELDS}
+        body["override_until"] = body["override_until"] or 0
+        body.update(changes)
+        return await self.request(
+            "PUT", f"{NETWORK_CONTROL_ENDPOINT}{profile['profile_id']}", json=body
+        )
 
     async def reboot(self) -> None:
         """Redémarre la Freebox (droit `settings`)."""

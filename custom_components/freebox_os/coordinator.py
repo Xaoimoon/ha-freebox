@@ -39,6 +39,8 @@ class FreeboxData:
     # None quand l'application n'a pas le droit `calls` / `settings`.
     calls: list[dict[str, Any]] | None = None
     wifi: dict[str, Any] | None = None
+    # Profils de contrôle parental par profile_id ; None sans le droit `parental`.
+    profiles: dict[int, dict[str, Any]] | None = None
 
 
 class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
@@ -58,6 +60,7 @@ class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
         self.supports_hosts = True
         self.supports_calls = True
         self.supports_wifi = True
+        self.supports_profiles = True
 
     async def _async_update_data(self) -> FreeboxData:
         try:
@@ -73,6 +76,10 @@ class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
                 data.calls = await self._optional(self.api.get_call_log, "supports_calls", "calls")
             if self.supports_wifi:
                 data.wifi = await self._optional(self.api.get_wifi_config, "supports_wifi", "settings")
+            if self.supports_profiles:
+                profiles = await self._optional(self.api.get_network_control, "supports_profiles", "parental")
+                if profiles is not None:
+                    data.profiles = {p["profile_id"]: p for p in profiles}
         except FreeboxAuthError as err:
             raise ConfigEntryAuthFailed(str(err)) from err
         except FreeboxApiError as err:
