@@ -1,10 +1,11 @@
-"""Capteurs Freebox OS : débits, volumes cumulés, températures, ventilateurs, appels,
-disques, profils de contrôle parental."""
+"""Capteurs Freebox OS : connexion, débits, volumes cumulés, fibre, démarrage, ports du
+switch, températures, ventilateurs, appels, disques, profils de contrôle parental."""
 
 from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -29,7 +30,7 @@ from homeassistant.util import dt as dt_util
 from . import FreeboxConfigEntry
 from .const import ACCESS_ALLOWED, ACCESS_DENIED, ACCESS_WEBONLY
 from .coordinator import FreeboxData, FreeboxDataUpdateCoordinator, last_outage
-from .entity import FreeboxEntity, disk_device_info
+from .entity import FreeboxEntity, FreeboxPortEntity, disk_device_info
 from .parental import FreeboxProfileEntity, async_track_profiles
 
 
@@ -119,6 +120,15 @@ FTTH_SENSORS: tuple[FreeboxSensorEntityDescription, ...] = (
 )
 
 
+# Compteurs d'octets d'un port, vus de la box : « reçues » = envoyées par
+# l'appareil branché sur le port.
+PORT_BYTES = {"rx": "rx_good_bytes", "tx": "tx_bytes"}
+
+# Écart à partir duquel l'heure de démarrage recalculée signale un redémarrage
+# (sinon : simple gigue d'une seconde entre l'uptime et l'horloge de HA).
+BOOT_TIME_TOLERANCE = timedelta(minutes=1)
+
+
 def _new_calls(data: FreeboxData, call_type: str) -> list[dict[str, Any]]:
     return [call for call in data.calls or [] if call.get("new") and call.get("type") == call_type]
 
@@ -134,6 +144,10 @@ async def async_setup_entry(
         FreeboxSensor(coordinator, description) for description in CONNECTION_SENSORS
     ]
     entities.append(FreeboxLastOutageSensor(coordinator))
+    entities.append(FreeboxBootTimeSensor(coordinator))
+    for port in data.switch_ports.values():
+        entities.append(FreeboxPortSpeedSensor(coordinator, port))
+        entities.extend(FreeboxPortBytesSensor(coordinator, port, key) for key in PORT_BYTES)
     if data.ftth and data.ftth.get("sfp_has_power_report"):
         entities.extend(FreeboxSensor(coordinator, description) for description in FTTH_SENSORS)
 
@@ -233,6 +247,68 @@ class FreeboxLastOutageSensor(FreeboxEntity, SensorEntity):
             "end": outage.end.isoformat() if outage.end else None,
             "duration": int(outage.duration.total_seconds()) if outage.duration else None,
         }
+
+
+class FreeboxBootTimeSensor(FreeboxEntity, SensorEntity):
+    """Heure du dernier démarrage de la box, déduite de son uptime."""
+
+    _attr_translation_key = "boot_time"
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(self, coordinator: FreeboxDataUpdateCoordinator) -> None:
+        super().__init__(coordinator, "boot_time")
+        self._boot_time: datetime | None = None
+
+    @property
+    def native_value(self) -> datetime | None:
+        uptime = self.coordinator.data.system.get("uptime_val")
+        if uptime is None:
+            return None
+        boot = (dt_util.utcnow() - timedelta(seconds=uptime)).replace(microsecond=0)
+        # Garde la valeur précédente tant que l'écart n'est que de la gigue.
+        if self._boot_time is None or abs(boot - self._boot_time) > BOOT_TIME_TOLERANCE:
+            self._boot_time = boot
+        return self._boot_time
+
+
+class FreeboxPortSpeedSensor(FreeboxPortEntity, SensorEntity):
+    """Vitesse négociée d'un port ; inconnue quand rien n'y est branché."""
+
+    _attr_translation_key = "port_speed"
+    _attr_device_class = SensorDeviceClass.DATA_RATE
+    _attr_native_unit_of_measurement = UnitOfDataRate.MEGABITS_PER_SECOND
+
+    def __init__(self, coordinator: FreeboxDataUpdateCoordinator, port: dict[str, Any]) -> None:
+        super().__init__(coordinator, port, "speed")
+
+    @property
+    def native_value(self) -> int | None:
+        if not self.link_up:
+            return None
+        try:
+            return int((self.port or {}).get("speed"))
+        except (TypeError, ValueError):
+            return None
+
+
+class FreeboxPortBytesSensor(FreeboxPortEntity, SensorEntity):
+    """Octets reçus ou envoyés par la box sur un port, depuis son démarrage."""
+
+    _attr_device_class = SensorDeviceClass.DATA_SIZE
+    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+    _attr_native_unit_of_measurement = UnitOfInformation.BYTES
+    _attr_suggested_unit_of_measurement = UnitOfInformation.GIGABYTES
+    _attr_suggested_display_precision = 2
+
+    def __init__(self, coordinator: FreeboxDataUpdateCoordinator, port: dict[str, Any], direction: str) -> None:
+        super().__init__(coordinator, port, f"bytes_{direction}")
+        self._attr_translation_key = f"port_bytes_{direction}"
+        self._stat = PORT_BYTES[direction]
+
+    @property
+    def native_value(self) -> int | None:
+        return self.port_stats.get(self._stat)
 
 
 class FreeboxSystemSensor(FreeboxEntity, SensorEntity):

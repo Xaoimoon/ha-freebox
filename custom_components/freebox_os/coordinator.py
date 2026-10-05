@@ -38,6 +38,9 @@ class FreeboxData:
     ftth: dict[str, Any] | None = None
     # Appareils du LAN, toutes interfaces confondues, par adresse MAC.
     hosts: dict[str, dict[str, Any]] = field(default_factory=dict)
+    # Ports du switch (`switch/status/`) et leurs compteurs, par id de port.
+    switch_ports: dict[int, dict[str, Any]] = field(default_factory=dict)
+    port_stats: dict[int, dict[str, Any]] = field(default_factory=dict)
     # Disques par id, partitions comprises.
     disks: dict[int, dict[str, Any]] = field(default_factory=dict)
     raids: dict[int, dict[str, Any]] = field(default_factory=dict)
@@ -76,6 +79,9 @@ class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
             data.connection_logs = await self.api.get_connection_logs()
             if data.connection.get("media") == "ftth":
                 data.ftth = await self.api.get_connection_ftth()
+            data.switch_ports = {port["id"]: port for port in await self.api.get_switch_status()}
+            for port_id in data.switch_ports:
+                data.port_stats[port_id] = await self.api.get_switch_port_stats(port_id)
             data.disks = {disk["id"]: disk for disk in await self.api.get_storage_disks()}
             data.raids = {raid["id"]: raid for raid in await self.api.get_storage_raids()}
             if self.supports_hosts:

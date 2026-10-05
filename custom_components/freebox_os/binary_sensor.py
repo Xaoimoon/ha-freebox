@@ -1,9 +1,10 @@
-"""Capteurs binaires Freebox OS : connexion Internet, signal fibre."""
+"""Capteurs binaires Freebox OS : connexion Internet, signal fibre, liens des ports du switch."""
 
 from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from typing import Any
 
 from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
@@ -16,7 +17,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import FreeboxConfigEntry
 from .coordinator import FreeboxData, FreeboxDataUpdateCoordinator
-from .entity import FreeboxEntity
+from .entity import FreeboxEntity, FreeboxPortEntity
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -55,6 +56,7 @@ async def async_setup_entry(
         for description in BINARY_SENSORS
         if description.exists_fn(coordinator.data)
     )
+    async_add_entities(FreeboxPortLinkSensor(coordinator, port) for port in coordinator.data.switch_ports.values())
 
 
 class FreeboxBinarySensor(FreeboxEntity, BinarySensorEntity):
@@ -69,3 +71,27 @@ class FreeboxBinarySensor(FreeboxEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool | None:
         return self.entity_description.value_fn(self.coordinator.data)
+
+
+class FreeboxPortLinkSensor(FreeboxPortEntity, BinarySensorEntity):
+    """Lien d'un port du switch, avec le mode négocié et les erreurs en attributs."""
+
+    _attr_translation_key = "port_link"
+    _attr_device_class = BinarySensorDeviceClass.CONNECTIVITY
+
+    def __init__(self, coordinator: FreeboxDataUpdateCoordinator, port: dict[str, Any]) -> None:
+        super().__init__(coordinator, port, "link")
+
+    @property
+    def is_on(self) -> bool:
+        return self.link_up
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        port, stats = self.port or {}, self.port_stats
+        return {
+            "mode": port.get("mode") if self.link_up else None,
+            "duplex": port.get("duplex") if self.link_up else None,
+            "rx_errors": stats.get("rx_err_packets"),
+            "rx_fcs_errors": stats.get("rx_fcs_packets"),
+        }

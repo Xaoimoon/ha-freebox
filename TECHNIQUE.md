@@ -43,7 +43,8 @@ En HTTPS, la Freebox présente un certificat signé par l'autorité de Free : la
 | `connection/logs/` | Changements d'état du lien (`link`) et de la connexion IP (`conn`) : `up`/`down`, horodatés | **vérifié** ; remis à zéro au démarrage de la box (un redémarrage n'y figure pas comme une coupure) |
 | `system/` | Firmware, `uptime_val` (s), `sensors` (°C : `temp_cpu0..3`, `temp_hdd`, `temp_t1`), `fans` (tr/min) | **vérifié** |
 | `lan/browser/pub/` | Appareils connectés (présence) : ~125 hôtes, `active`, `l2ident`, `l3connectivities` | **vérifié** |
-| `switch/status/` | Ports Ethernet : lien, vitesse, MAC vues | **vérifié** (5 ports, dont 9999 = SFP LAN) |
+| `switch/status/` | Ports Ethernet : lien, vitesse (texte, « 10 » half sur un port libre), mode, MAC vues | **vérifié** (5 ports, dont 9999 = SFP LAN) |
+| `switch/port/{id}/stats/` | Compteurs du port, vus de la box : `rx_good_bytes` / `tx_bytes`, débits, erreurs | **vérifié** ; `switch/port/` sans id renvoie 404 |
 | `storage/disk/` | Disques et partitions (NVMe 2 To « Nas »), température | **vérifié** |
 | `wifi/state/`, `wifi/ap/` | Wi-Fi de la box | **vérifié** : désactivé (le Wi-Fi passe par les eero) |
 | `call/` | Journal d'appels | à vérifier |

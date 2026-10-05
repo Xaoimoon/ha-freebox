@@ -12,6 +12,12 @@
         "state": {
           "off": "mdi:signal-off"
         }
+      },
+      "port_link": {
+        "default": "mdi:ethernet",
+        "state": {
+          "off": "mdi:ethernet-off"
+        }
       }
     },
     "button": {
@@ -29,6 +35,9 @@
           "denied": "mdi:shield-lock",
           "allowed": "mdi:shield-check"
         }
+      },
+      "boot_time": {
+        "default": "mdi:restart"
       },
       "bytes_down": {
         "default": "mdi:download"
@@ -53,6 +62,15 @@
       },
       "partition_free_space": {
         "default": "mdi:harddisk"
+      },
+      "port_bytes_rx": {
+        "default": "mdi:download"
+      },
+      "port_bytes_tx": {
+        "default": "mdi:upload"
+      },
+      "port_speed": {
+        "default": "mdi:speedometer"
       },
       "rate_down": {
         "default": "mdi:download-network"

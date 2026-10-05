@@ -34,6 +34,7 @@ from .const import (
     NETWORK_CONTROL_ENDPOINT,
     STORAGE_DISK_ENDPOINT,
     STORAGE_RAID_ENDPOINT,
+    SWITCH_PORT_STATS_ENDPOINT,
     SWITCH_STATUS_ENDPOINT,
     SYSTEM_ENDPOINT,
     SYSTEM_REBOOT_ENDPOINT,
@@ -280,6 +281,10 @@ class FreeboxApiClient:
     async def get_switch_status(self) -> list[dict[str, Any]]:
         """Ports Ethernet du switch : lien, vitesse, MAC vues."""
         return await self.request("GET", SWITCH_STATUS_ENDPOINT) or []
+
+    async def get_switch_port_stats(self, port_id: int) -> dict[str, Any]:
+        """Compteurs d'un port du switch : octets, paquets, erreurs, débits."""
+        return await self.request("GET", SWITCH_PORT_STATS_ENDPOINT.format(port_id=port_id)) or {}
 
     async def get_storage_disks(self) -> list[dict[str, Any]]:
         """Disques internes et externes, avec leurs partitions."""

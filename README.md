@@ -21,6 +21,10 @@ Un appareil pour la Freebox, avec :
   depuis le démarrage de la box), pour être alerté d'une panne ;
 - sur la fibre : **signal fibre** et **puissances optiques reçue et émise** (dBm, diagnostic), pour
   repérer une fibre qui se dégrade (côté abonné, la puissance reçue doit rester entre -8 et -27 dBm) ;
+- **démarrée le** : heure du dernier démarrage de la box (diagnostic), pour repérer ses redémarrages ;
+- **ports du switch** (diagnostic), pour chaque port Ethernet et le port SFP LAN : lien (mode négocié
+  et erreurs en attributs), vitesse en Mbit/s, données reçues et envoyées par la box sur le port
+  (compteurs `total_increasing`) ;
 - débits montant et descendant (ko/s) ;
 - **volumes de données reçues et envoyées** : les compteurs cumulés de la box (en Go, état
   `total_increasing`), utilisables directement par les `utility_meter` et les statistiques ;

@@ -43,6 +43,23 @@
       },
       "ftth_signal": {
         "name": "Signal fibre"
+      },
+      "port_link": {
+        "name": "Lien {port}",
+        "state_attributes": {
+          "mode": {
+            "name": "Mode"
+          },
+          "duplex": {
+            "name": "Duplex"
+          },
+          "rx_errors": {
+            "name": "Erreurs de réception"
+          },
+          "rx_fcs_errors": {
+            "name": "Erreurs FCS"
+          }
+        }
       }
     },
     "button": {
@@ -61,6 +78,9 @@
           "denied": "Bloqué",
           "webonly": "Web seulement"
         }
+      },
+      "boot_time": {
+        "name": "Démarrée le"
       },
       "bytes_down": {
         "name": "Données reçues"
@@ -90,6 +110,15 @@
       },
       "partition_free_space": {
         "name": "Espace libre {partition}"
+      },
+      "port_bytes_rx": {
+        "name": "Données reçues {port}"
+      },
+      "port_bytes_tx": {
+        "name": "Données envoyées {port}"
+      },
+      "port_speed": {
+        "name": "Vitesse {port}"
       },
       "rate_down": {
         "name": "Vitesse de téléchargement"
