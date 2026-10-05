@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+# Forgejo doesn't support the GitHub `permissions:` key (it's ignored, with
+# a warning) — the automatic FORGEJO_TOKEN/GITHUB_TOKEN already has write
+# access to this repository by default (push commits, call write API
+# endpoints), scoped to this repo only. If release creation ever gets
+# rejected, the fix is an Authorized Integration, not a `permissions:` block:
+# https://forgejo.org/docs/latest/user/api/authorized-integrations/
+jobs:
+  release:
+    # Guards against the release commit this job pushes re-triggering itself.
+    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # actions/setup-python fetches prebuilt binaries from actions/python-versions,
+      # which doesn't reliably publish linux-arm64 builds for every version — the
+      # runner here is arm64. The scripts only need stdlib, so a plain apt install
+      # of whatever python3 Debian bullseye ships is enough and works on any arch.
+      - name: Install Python
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends python3
+
+      - name: Compute next version
+        id: bump
+        run: python3 scripts/bump_version.py --github-output "$GITHUB_OUTPUT"
+
+      - name: Commit, tag and push
+        if: steps.bump.outputs.should_release == 'true'
+        env:
+          VERSION: ${{ steps.bump.outputs.version }}
+          TAG: ${{ steps.bump.outputs.tag }}
+        run: |
+          git config user.name "Forgejo Actions"
+          git config user.email "actions@brokk.xaoimoon.fr"
+          git add custom_components/freebox_os/manifest.json
+          # No "[skip ci]" here: the tag points to this commit, and GitHub
+          # skips every push-triggered workflow (tag pushes included) whose
+          # head commit carries it, so the mirror's GitHub release would never
+          # be created. The job-level `if:` already prevents a re-trigger.
+          git commit -m "chore(release): v${VERSION}"
+          git tag "${TAG}"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@brokk.xaoimoon.fr/xaoimoon/ha-freebox.git"
+          git push origin HEAD:main
+          git push origin "${TAG}"
+
+      - name: Create Forgejo release
+        if: steps.bump.outputs.should_release == 'true'
+        env:
+          TAG: ${{ steps.bump.outputs.tag }}
+        run: |
+          python3 scripts/create_release.py \
+            --server https://brokk.xaoimoon.fr \
+            --repo xaoimoon/ha-freebox \
+            --token "${{ secrets.GITHUB_TOKEN }}" \
+            --tag "${TAG}" \
+            --notes-file release_notes.md

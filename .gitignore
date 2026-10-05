@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.vscode/
+.idea/
+.DS_Store
+*.log
+.env
+config/
+release_notes.md
+# Jetons d'application Freebox et réponses brutes de l'API capturées en développement
+dev/

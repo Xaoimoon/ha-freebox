@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+# Home Assistant itself comes from scripts/setup.
+python3 -m pip install --quiet pytest==8.4.2 pytest-asyncio==1.2.0 aioresponses==0.7.9
+python3 -m pytest tests/ -v

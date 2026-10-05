@@ -1,0 +1,51 @@
+name: GitHub Release
+
+# This repository is a push mirror of
+# https://brokk.xaoimoon.fr/xaoimoon/ha-freebox: versions are bumped
+# and tagged there (.forgejo/workflows/release.yml), and the mirror only
+# carries the tags over. HACS installs from GitHub Releases, not bare tags,
+# so this turns every mirrored vX.Y.Z tag into a release.
+#
+# Forgejo ignores .github/workflows as long as .forgejo/workflows exists, so
+# this workflow only ever runs on GitHub.
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+  # GitHub creates no push event when more than three tags are pushed at
+  # once (e.g. the mirror's first sync): backfill those by hand from here.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to release (e.g. v0.1.0)
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists"
+            exit 0
+          fi
+          # Same notes as the Forgejo release (scripts/bump_version.py): every
+          # Conventional Commits subject since the previous tag, minus the
+          # release commit itself.
+          prev=$(git describe --tags --abbrev=0 --match 'v[0-9]*.[0-9]*.[0-9]*' "$TAG^" 2>/dev/null || true)
+          range=${prev:+$prev..}$TAG
+          git log --format=%s "$range" \
+            | grep -E '^[[:alnum:]_]+(\([^)]*\))?!?: ' \
+            | grep -v '^chore(release):' \
+            | sed 's/^/- /' > notes.md || true
+          gh release create "$TAG" --title "$TAG" --notes-file notes.md --verify-tag

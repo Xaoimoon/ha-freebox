@@ -1,0 +1,13 @@
+{
+  "domain": "freebox_os",
+  "name": "Freebox OS",
+  "codeowners": ["@Xaoimoon"],
+  "config_flow": false,
+  "dependencies": [],
+  "documentation": "https://github.com/Xaoimoon/ha-freebox",
+  "issue_tracker": "https://github.com/Xaoimoon/ha-freebox/issues",
+  "integration_type": "hub",
+  "iot_class": "local_polling",
+  "version": "0.0.0",
+  "requirements": []
+}
