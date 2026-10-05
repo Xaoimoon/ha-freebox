@@ -1,3 +1,4 @@
 * text=auto eol=lf
 scripts/setup text eol=lf
 scripts/develop text eol=lf
+*.png binary

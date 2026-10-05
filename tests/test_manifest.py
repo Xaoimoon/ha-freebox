@@ -32,3 +32,16 @@ def test_manifest_version_is_semver():
 def test_hacs_json_is_valid():
     hacs = json.loads((ROOT / "hacs.json").read_text(encoding="utf-8"))
     assert hacs["name"] and hacs["homeassistant"]
+
+
+def test_brand_images():
+    # Servies par Home Assistant (≥ 2026.6) depuis le dossier `brand/` de l'intégration ;
+    # les variantes sombres retombent sur celles-ci.
+    brand = COMPONENT / "brand"
+    expected = {"icon.png": (256, 256), "icon@2x.png": (512, 512), "logo.png": None, "logo@2x.png": None}
+    assert {p.name for p in brand.iterdir()} == set(expected)
+    for name, size in expected.items():
+        header = (brand / name).read_bytes()[:24]
+        assert header[:8] == b"\x89PNG\r\n\x1a\n"
+        if size:
+            assert (int.from_bytes(header[16:20], "big"), int.from_bytes(header[20:24], "big")) == size
