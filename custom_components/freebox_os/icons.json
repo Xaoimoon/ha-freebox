@@ -1,5 +1,19 @@
 {
   "entity": {
+    "binary_sensor": {
+      "connection": {
+        "default": "mdi:web",
+        "state": {
+          "off": "mdi:web-off"
+        }
+      },
+      "ftth_signal": {
+        "default": "mdi:signal-variant",
+        "state": {
+          "off": "mdi:signal-off"
+        }
+      }
+    },
     "button": {
       "mark_calls_as_read": {
         "default": "mdi:phone-check"
@@ -28,6 +42,9 @@
       "fan_speed": {
         "default": "mdi:fan"
       },
+      "last_outage": {
+        "default": "mdi:web-cancel"
+      },
       "missed": {
         "default": "mdi:phone-missed"
       },
@@ -42,6 +59,12 @@
       },
       "rate_up": {
         "default": "mdi:upload-network"
+      },
+      "sfp_pwr_rx": {
+        "default": "mdi:arrow-down-bold-circle-outline"
+      },
+      "sfp_pwr_tx": {
+        "default": "mdi:arrow-up-bold-circle-outline"
       }
     },
     "switch": {

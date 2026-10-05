@@ -29,6 +29,8 @@ def make_api() -> AsyncMock:
     api = AsyncMock()
     api.get_system.return_value = result("system")
     api.get_connection.return_value = result("connection")
+    api.get_connection_logs.return_value = result("connection_logs")
+    api.get_connection_ftth.return_value = result("connection_ftth")
     api.get_storage_disks.return_value = result("storage_disk")
     api.get_storage_raids.return_value = []
     api.get_lan_interfaces.return_value = result("lan_browser_interfaces")

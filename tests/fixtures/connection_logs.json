@@ -1,0 +1,53 @@
+{
+  "success": true,
+  "result": [
+    {
+      "state": "up",
+      "type": "link",
+      "bw_down": 8000000000,
+      "link": "ftth",
+      "id": 1,
+      "bw_up": 8000000000,
+      "date": 1787236876
+    },
+    {
+      "conn": "ftth_pub",
+      "type": "conn",
+      "id": 3,
+      "state": "up",
+      "date": 1787236882
+    },
+    {
+      "conn": "ftth_pub",
+      "type": "conn",
+      "id": 6,
+      "state": "down",
+      "date": 1787277638
+    },
+    {
+      "state": "down",
+      "type": "link",
+      "bw_down": 0,
+      "link": "ftth",
+      "id": 7,
+      "bw_up": 0,
+      "date": 1787277642
+    },
+    {
+      "state": "up",
+      "type": "link",
+      "bw_down": 8000000000,
+      "link": "ftth",
+      "id": 9,
+      "bw_up": 8000000000,
+      "date": 1787277692
+    },
+    {
+      "conn": "ftth_pub",
+      "type": "conn",
+      "id": 11,
+      "state": "up",
+      "date": 1787277725
+    }
+  ]
+}

@@ -17,6 +17,10 @@ problème de permission.
 
 Un appareil pour la Freebox, avec :
 
+- **connexion Internet** (en ligne / hors ligne) et **dernière coupure** (début, fin et durée,
+  depuis le démarrage de la box), pour être alerté d'une panne ;
+- sur la fibre : **signal fibre** et **puissances optiques reçue et émise** (dBm, diagnostic), pour
+  repérer une fibre qui se dégrade (côté abonné, la puissance reçue doit rester entre -8 et -27 dBm) ;
 - débits montant et descendant (ko/s) ;
 - **volumes de données reçues et envoyées** : les compteurs cumulés de la box (en Go, état
   `total_increasing`), utilisables directement par les `utility_meter` et les statistiques ;

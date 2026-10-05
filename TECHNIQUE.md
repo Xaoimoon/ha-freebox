@@ -40,6 +40,7 @@ En HTTPS, la Freebox présente un certificat signé par l'autorité de Free : la
 |---|---|---|
 | `connection/` | État, débits, **compteurs cumulés** `bytes_down`/`bytes_up` (octets), IPv4/IPv6 | **vérifié** (media `ftth`, type `ethernet`) |
 | `connection/ftth/` | SFP fibre : signal, `sfp_pwr_rx`/`sfp_pwr_tx` en centièmes de dBm | **vérifié** (lien `pon`) |
+| `connection/logs/` | Changements d'état du lien (`link`) et de la connexion IP (`conn`) : `up`/`down`, horodatés | **vérifié** ; remis à zéro au démarrage de la box (un redémarrage n'y figure pas comme une coupure) |
 | `system/` | Firmware, `uptime_val` (s), `sensors` (°C : `temp_cpu0..3`, `temp_hdd`, `temp_t1`), `fans` (tr/min) | **vérifié** |
 | `lan/browser/pub/` | Appareils connectés (présence) : ~125 hôtes, `active`, `l2ident`, `l3connectivities` | **vérifié** |
 | `switch/status/` | Ports Ethernet : lien, vitesse, MAC vues | **vérifié** (5 ports, dont 9999 = SFP LAN) |

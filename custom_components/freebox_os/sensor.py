@@ -16,6 +16,7 @@ from homeassistant.components.sensor import (
 from homeassistant.const import (
     PERCENTAGE,
     REVOLUTIONS_PER_MINUTE,
+    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
     EntityCategory,
     UnitOfDataRate,
     UnitOfInformation,
@@ -27,7 +28,7 @@ from homeassistant.util import dt as dt_util
 
 from . import FreeboxConfigEntry
 from .const import ACCESS_ALLOWED, ACCESS_DENIED, ACCESS_WEBONLY
-from .coordinator import FreeboxData, FreeboxDataUpdateCoordinator
+from .coordinator import FreeboxData, FreeboxDataUpdateCoordinator, last_outage
 from .entity import FreeboxEntity, disk_device_info
 from .parental import FreeboxProfileEntity, async_track_profiles
 
@@ -81,6 +82,43 @@ CONNECTION_SENSORS: tuple[FreeboxSensorEntityDescription, ...] = (
 )
 
 
+def _optical_power(key: str) -> Callable[[FreeboxData], float | None]:
+    """Puissance optique du module SFP : la box la donne en centièmes de dBm."""
+
+    def value(data: FreeboxData) -> float | None:
+        raw = (data.ftth or {}).get(key)
+        return round(raw / 100, 2) if raw is not None else None
+
+    return value
+
+
+# Fibre (FTTH), quand le module SFP remonte ses mesures. Repère GPON côté
+# abonné : puissance reçue entre -8 et -27 dBm ; une baisse durable annonce
+# une fibre ou une connectique qui se dégrade.
+FTTH_SENSORS: tuple[FreeboxSensorEntityDescription, ...] = (
+    FreeboxSensorEntityDescription(
+        key="sfp_pwr_rx",
+        translation_key="sfp_pwr_rx",
+        device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+        suggested_display_precision=2,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=_optical_power("sfp_pwr_rx"),
+    ),
+    FreeboxSensorEntityDescription(
+        key="sfp_pwr_tx",
+        translation_key="sfp_pwr_tx",
+        device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+        suggested_display_precision=2,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=_optical_power("sfp_pwr_tx"),
+    ),
+)
+
+
 def _new_calls(data: FreeboxData, call_type: str) -> list[dict[str, Any]]:
     return [call for call in data.calls or [] if call.get("new") and call.get("type") == call_type]
 
@@ -95,6 +133,9 @@ async def async_setup_entry(
     entities: list[SensorEntity] = [
         FreeboxSensor(coordinator, description) for description in CONNECTION_SENSORS
     ]
+    entities.append(FreeboxLastOutageSensor(coordinator))
+    if data.ftth and data.ftth.get("sfp_has_power_report"):
+        entities.extend(FreeboxSensor(coordinator, description) for description in FTTH_SENSORS)
 
     # Les identifiants et les noms des capteurs varient selon le modèle : on
     # prend ceux que la box annonce (déjà traduits par Freebox OS).
@@ -166,6 +207,32 @@ class FreeboxSensor(FreeboxEntity, SensorEntity):
     @property
     def native_value(self) -> Any:
         return self.entity_description.value_fn(self.coordinator.data)
+
+
+class FreeboxLastOutageSensor(FreeboxEntity, SensorEntity):
+    """Début de la dernière coupure de la connexion depuis le démarrage de la box ;
+    inconnu s'il n'y en a pas eu. Fin et durée en attributs."""
+
+    _attr_translation_key = "last_outage"
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+
+    def __init__(self, coordinator: FreeboxDataUpdateCoordinator) -> None:
+        super().__init__(coordinator, "last_outage")
+
+    @property
+    def native_value(self):
+        outage = last_outage(self.coordinator.data.connection_logs)
+        return outage.start if outage else None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        outage = last_outage(self.coordinator.data.connection_logs)
+        if outage is None:
+            return {}
+        return {
+            "end": outage.end.isoformat() if outage.end else None,
+            "duration": int(outage.duration.total_seconds()) if outage.duration else None,
+        }
 
 
 class FreeboxSystemSensor(FreeboxEntity, SensorEntity):

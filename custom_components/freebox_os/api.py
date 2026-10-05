@@ -24,6 +24,7 @@ from .const import (
     CALL_LOG_MARK_READ_ENDPOINT,
     CONNECTION_ENDPOINT,
     CONNECTION_FTTH_ENDPOINT,
+    CONNECTION_LOGS_ENDPOINT,
     LAN_HOSTS_ENDPOINT,
     LAN_INTERFACES_ENDPOINT,
     LOGIN_AUTHORIZE_ENDPOINT,
@@ -259,6 +260,10 @@ class FreeboxApiClient:
     async def get_connection_ftth(self) -> dict[str, Any]:
         """Module SFP fibre : présence, signal, puissances optiques."""
         return await self.request("GET", CONNECTION_FTTH_ENDPOINT)
+
+    async def get_connection_logs(self) -> list[dict[str, Any]]:
+        """Changements d'état du lien et de la connexion depuis le démarrage de la box."""
+        return await self.request("GET", CONNECTION_LOGS_ENDPOINT) or []
 
     async def get_system(self) -> dict[str, Any]:
         """Modèle, firmware, uptime, températures et ventilateurs."""

@@ -37,6 +37,14 @@
     }
   },
   "entity": {
+    "binary_sensor": {
+      "connection": {
+        "name": "Internet connection"
+      },
+      "ftth_signal": {
+        "name": "Fiber signal"
+      }
+    },
     "button": {
       "mark_calls_as_read": {
         "name": "Mark calls as read"
@@ -63,6 +71,17 @@
       "connected_devices": {
         "name": "Connected devices"
       },
+      "last_outage": {
+        "name": "Last outage",
+        "state_attributes": {
+          "end": {
+            "name": "End"
+          },
+          "duration": {
+            "name": "Duration (s)"
+          }
+        }
+      },
       "missed": {
         "name": "Missed calls"
       },
@@ -77,6 +96,12 @@
       },
       "rate_up": {
         "name": "Upload speed"
+      },
+      "sfp_pwr_rx": {
+        "name": "Optical power received"
+      },
+      "sfp_pwr_tx": {
+        "name": "Optical power transmitted"
       }
     },
     "switch": {

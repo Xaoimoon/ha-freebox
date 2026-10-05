@@ -37,6 +37,14 @@
     }
   },
   "entity": {
+    "binary_sensor": {
+      "connection": {
+        "name": "Connexion Internet"
+      },
+      "ftth_signal": {
+        "name": "Signal fibre"
+      }
+    },
     "button": {
       "mark_calls_as_read": {
         "name": "Marquer les appels comme lus"
@@ -63,6 +71,17 @@
       "connected_devices": {
         "name": "Appareils connectés"
       },
+      "last_outage": {
+        "name": "Dernière coupure",
+        "state_attributes": {
+          "end": {
+            "name": "Fin"
+          },
+          "duration": {
+            "name": "Durée (s)"
+          }
+        }
+      },
       "missed": {
         "name": "Appels manqués"
       },
@@ -77,6 +96,12 @@
       },
       "rate_up": {
         "name": "Vitesse d'envoi"
+      },
+      "sfp_pwr_rx": {
+        "name": "Puissance optique reçue"
+      },
+      "sfp_pwr_tx": {
+        "name": "Puissance optique émise"
       }
     },
     "switch": {

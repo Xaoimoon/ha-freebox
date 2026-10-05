@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.util import dt as dt_util
 
 from .api import (
     FreeboxApiClient,
@@ -31,6 +32,10 @@ class FreeboxData:
 
     system: dict[str, Any]
     connection: dict[str, Any]
+    # Journal de connexion depuis le démarrage de la box.
+    connection_logs: list[dict[str, Any]] = field(default_factory=list)
+    # Module SFP fibre ; None hors FTTH.
+    ftth: dict[str, Any] | None = None
     # Appareils du LAN, toutes interfaces confondues, par adresse MAC.
     hosts: dict[str, dict[str, Any]] = field(default_factory=dict)
     # Disques par id, partitions comprises.
@@ -68,6 +73,9 @@ class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
                 system=await self.api.get_system(),
                 connection=await self.api.get_connection(),
             )
+            data.connection_logs = await self.api.get_connection_logs()
+            if data.connection.get("media") == "ftth":
+                data.ftth = await self.api.get_connection_ftth()
             data.disks = {disk["id"]: disk for disk in await self.api.get_storage_disks()}
             data.raids = {raid["id"]: raid for raid in await self.api.get_storage_raids()}
             if self.supports_hosts:
@@ -114,3 +122,38 @@ class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
             _LOGGER.debug("Liste des appareils indisponible (mode bridge)")
             self.supports_hosts = False
         return hosts
+
+
+@dataclass(frozen=True)
+class Outage:
+    """Coupure de la connexion Internet relevée dans le journal de la box."""
+
+    start: datetime
+    # None tant que la connexion n'est pas revenue.
+    end: datetime | None
+
+    @property
+    def duration(self) -> timedelta | None:
+        return self.end - self.start if self.end else None
+
+
+def last_outage(logs: list[dict[str, Any]]) -> Outage | None:
+    """Dernière coupure du journal de connexion (depuis le démarrage de la box).
+
+    Une coupure commence au premier événement `down` (lien fibre ou connexion
+    IP) et se termine quand la connexion IP repasse `up` (le lien, si le
+    journal ne contient pas d'événements de connexion).
+    """
+    events = sorted(logs, key=lambda log: (log.get("date", 0), log.get("id", 0)))
+    restore_type = "conn" if any(e.get("type") == "conn" for e in events) else "link"
+    outage: Outage | None = None
+    start: int | None = None
+    for event in events:
+        state = event.get("state")
+        if state == "down" and start is None:
+            start = event["date"]
+            outage = Outage(dt_util.utc_from_timestamp(start), None)
+        elif state == "up" and start is not None and event.get("type") == restore_type:
+            outage = Outage(dt_util.utc_from_timestamp(start), dt_util.utc_from_timestamp(event["date"]))
+            start = None
+    return outage
