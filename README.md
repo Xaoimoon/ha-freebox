@@ -1,160 +1,138 @@
 # Freebox OS pour Home Assistant
 
 [![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge)](https://hacs.xyz/docs/faq/custom_repositories)
+[![Installations actives](https://img.shields.io/badge/dynamic/json?style=for-the-badge&color=41BDF5&label=Active%20installations&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.freebox_os.total)](https://analytics.home-assistant.io/)
+[![Release](https://img.shields.io/github/v/release/Xaoimoon/ha-freebox?style=for-the-badge)](https://github.com/Xaoimoon/ha-freebox/releases)
 [![Licence](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](https://github.com/Xaoimoon/ha-freebox/blob/main/LICENSE)
-[![Statut](https://img.shields.io/badge/statut-en%20d%C3%A9veloppement-yellow.svg?style=for-the-badge)](https://github.com/Xaoimoon/ha-freebox/commits/main)
 
-Intégration Home Assistant (non officielle) pour les Freebox, construite sur l'API
-Freebox OS actuelle. Elle vise à remplacer l'intégration officielle `freebox`, qui suit mal
-les versions récentes de Freebox OS : par exemple, sur une Freebox Ultra (v9), l'API
-domotique `home/*` n'existe pas et l'intégration officielle le signale à tort comme un
-problème de permission.
+[![Maintenu](https://img.shields.io/badge/maintained-yes-green.svg?style=for-the-badge)](https://github.com/Xaoimoon/ha-freebox/commits/main)
+[![Activité](https://img.shields.io/github/commit-activity/y/Xaoimoon/ha-freebox?style=for-the-badge)](https://github.com/Xaoimoon/ha-freebox/commits/main)
 
-> **En développement.** La première version reprend les entités de l'intégration officielle ;
-> les fonctions propres à cette intégration arrivent ensuite (voir les objectifs).
+Intégration Home Assistant (non officielle) pour les Freebox. Elle dialogue en local avec la box, par l'API de Freebox OS, et affiche dans Home Assistant l'état de la connexion et de la fibre, le trafic, le contrôle parental, les appareils connectés et l'état de la box. C'est une alternative à l'intégration officielle `freebox`, plus fidèle aux Freebox récentes comme la Freebox Ultra.
 
 ## Fonctionnalités
 
-Un appareil pour la Freebox, avec :
-
-- **connexion Internet** (en ligne / hors ligne) et **dernière coupure** (début, fin et durée,
-  depuis le démarrage de la box), pour être alerté d'une panne ;
-- sur la fibre : **signal fibre** et **puissances optiques reçue et émise** (dBm, diagnostic), pour
-  repérer une fibre qui se dégrade (côté abonné, la puissance reçue doit rester entre -8 et -27 dBm) ;
-- **démarrée le** : heure du dernier démarrage de la box (diagnostic), pour repérer ses redémarrages ;
-- **ports du switch** (diagnostic), pour chaque port Ethernet et le port SFP LAN : lien (mode négocié
-  et erreurs en attributs), vitesse en Mbit/s, données reçues et envoyées par la box sur le port
-  (compteurs `total_increasing`) ;
-- débits montant et descendant (ko/s) ;
-- **volumes de données reçues et envoyées** : les compteurs cumulés de la box (en Go, état
-  `total_increasing`), utilisables directement par les `utility_meter` et les statistiques ;
-- températures et ventilateurs annoncés par la box (diagnostic) ;
-- appels manqués non lus, et un bouton pour marquer le journal d'appels comme lu ;
-- un bouton de redémarrage et un interrupteur pour le Wi-Fi de la box ;
-- le suivi de la box elle-même (connexion, IPv4/IPv6, uptime en attributs).
-
-Un appareil par disque, avec l'espace libre de chaque partition.
-
-### Contrôle parental
-
-Chaque profil créé dans Freebox OS (**Paramètres de la Freebox > Contrôle parental**) devient
-un appareil dans Home Assistant, sans rien configurer : un profil ajouté plus tard apparaît tout
-seul, un profil supprimé peut ensuite être retiré de Home Assistant. Pour chaque profil :
-
-| Entité | Rôle |
-|---|---|
-| **Accès Internet** (interrupteur) | Éteint : coupe Internet jusqu'à nouvel ordre. Allumé : rétablit l'accès, jusqu'au prochain changement prévu par le planning du profil. |
-| **Mode** | Autorisé ou Bloqué, tel qu'appliqué en ce moment par la box. |
-| **Prochain changement** | Fin d'une pause, ou prochain changement du planning. |
-| **Appareils connectés** | Nombre d'appareils du profil en ligne ; la liste complète est en attribut. |
-| **Reprendre le planning** (bouton) | Annule une pause ou une autorisation manuelle. |
-
-Pour une durée, les actions **`freebox_os.block_internet`** et **`freebox_os.allow_internet`**
-acceptent un champ `duration` ; **`freebox_os.resume_schedule`** rend la main au planning. Elles
-ciblent l'interrupteur « Accès Internet » d'un ou plusieurs profils :
-
-```yaml
-# Couper Internet pendant le dîner
-action: freebox_os.block_internet
-target:
-  entity_id: switch.alice_acces_internet
-data:
-  duration: "01:00:00"
-```
-
-Les horaires réguliers restent à régler dans le planning du profil, dans Freebox OS : Home
-Assistant sert aux exceptions (punition, devoirs, repas…).
-
-### Présence
-
-Un traceur de présence (`device_tracker`) par appareil vu sur le réseau local, désactivé par
-défaut sauf si Home Assistant connaît déjà un appareil avec la même adresse MAC.
-
-## Objectifs
-
-- Appairage par jeton d'application, validé sur l'écran de la Freebox.
-- Connexion Internet : état, débits, et **compteurs de trafic cumulés** directement utilisables
-  par le tableau de bord Énergie et les `utility_meter`, sans calcul intermédiaire.
-- Wi-Fi, appareils connectés (présence), stockage, et le reste de l'API selon le modèle de Freebox.
-- Détection des fonctions absentes selon le modèle (Ultra, Delta, Pop…) : une fonction que la
-  Freebox ne propose pas est ignorée, pas signalée comme une erreur.
-- Fonctionnement en local uniquement (`local_polling`), sans compte en ligne.
-
-## Configuration
-
-1. **Paramètres > Appareils et services > Ajouter une intégration**, choisir **Freebox OS**
-   (la Freebox est aussi découverte automatiquement sur le réseau local).
-2. Garder l'hôte `mafreebox.freebox.fr` et le port `80`, ou saisir l'adresse IP de la box.
-3. Valider, puis accepter la demande d'accès **sur l'écran de la Freebox** (flèche de droite).
-4. Dans Freebox OS (**Paramètres de la Freebox > Gestion des accès > Applications**), accorder à
-   l'application « Home Assistant (Freebox OS) » :
-   - **Modification des réglages de la Freebox** : redémarrage et Wi-Fi ;
-   - **Accès au gestionnaire d'appels** : journal d'appels ;
-   - **Accès au contrôle parental** : profils de contrôle parental.
-
-   Sans ces droits, les entités concernées ne sont pas créées.
-
-Si l'application est révoquée dans Freebox OS, Home Assistant propose de refaire l'appairage.
-
-## Cohabitation avec l'intégration officielle
-
-Le domaine de cette intégration est **`freebox_os`** : elle peut être installée à côté de
-l'intégration officielle `freebox`, le temps de reporter les entités utilisées par les
-tableaux de bord et les automations, avant de supprimer l'officielle.
+- Connexion Internet en temps réel et dernière coupure, pour être alerté d'une panne.
+- Débits montant et descendant, et volumes de données reçues et envoyées, directement utilisables dans les statistiques et les compteurs (`utility_meter`).
+- Qualité de la fibre : signal et puissances optiques reçue et émise.
+- Contrôle parental : couper ou rétablir Internet pour chaque profil de Freebox OS, pour une durée ou jusqu'à nouvel ordre.
+- Ports Ethernet de la box : lien, vitesse et trafic de chaque port.
+- État de la box : températures, ventilateur, heure de démarrage, espace disque ; redémarrage et Wi-Fi.
+- Appels manqués sur la ligne fixe.
+- Présence des appareils du réseau local.
+- Fonctionnement 100 % local : ni compte en ligne, ni cloud.
 
 ## Installation
 
-### Via HACS
+### Via HACS (recommandé)
 
-1. Dans HACS, menu **⋮ > Dépôts personnalisés**, ajouter `https://github.com/Xaoimoon/ha-freebox`
-   avec le type **Intégration**.
-2. Rechercher « Freebox OS » dans HACS, puis **Télécharger**.
+[![Ouvrir le dépôt dans HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Xaoimoon&repository=ha-freebox&category=integration)
+
+Cliquer sur le bouton ci-dessus, ou ajouter le dépôt à la main :
+
+1. Dans HACS, menu **⋮ > Dépôts personnalisés**, ajouter `https://github.com/Xaoimoon/ha-freebox` avec le type **Intégration**.
+2. Rechercher "Freebox OS" dans HACS, puis **Télécharger**.
 3. Redémarrer Home Assistant.
+
+HACS vous proposera ensuite automatiquement les nouvelles versions.
 
 ### Manuelle
 
-Copier le dossier `custom_components/freebox_os` de ce dépôt dans le dossier
-`custom_components` de la configuration de Home Assistant, puis redémarrer.
+1. Repérer le dossier de configuration de Home Assistant (celui qui contient `configuration.yaml`).
+2. Y créer un dossier `custom_components` s'il n'existe pas déjà.
+3. Copier le dossier `custom_components/freebox_os` de ce dépôt dedans, pour obtenir `<config>/custom_components/freebox_os/`.
+4. Redémarrer Home Assistant.
 
-Home Assistant Core 2026.8 ou plus récent est requis.
+## Configuration
 
-## Développement
+[![Ajouter l'intégration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=freebox_os)
 
-Le dépôt principal est sur [brokk](https://brokk.xaoimoon.fr/xaoimoon/ha-freebox) ; GitHub
-en est une copie, utilisée par HACS.
+Cliquer sur le bouton ci-dessus, ou :
 
-```bash
-scripts/setup     # installe Home Assistant (même version que la production)
-scripts/test      # lance les tests
-scripts/develop   # démarre un Home Assistant de test avec l'intégration, dans ./config
-```
+1. **Paramètres > Appareils et services > Ajouter une intégration**.
+2. Chercher "Freebox OS". La Freebox est souvent déjà proposée dans les appareils découverts.
+3. Garder l'adresse proposée (`mafreebox.freebox.fr`, port `80`) ou saisir l'adresse IP de la box.
+4. Valider, puis **accepter la demande d'accès sur l'écran de la Freebox** (flèche de droite). Home Assistant attend jusqu'à deux minutes.
+5. Dans Freebox OS (**Paramètres de la Freebox > Gestion des accès > Applications**), accorder à l'application « Home Assistant (Freebox OS) » les droits des fonctions voulues :
+   - **Modification des réglages de la Freebox** : redémarrage et Wi-Fi ;
+   - **Accès au gestionnaire d'appels** : appels manqués ;
+   - **Accès au contrôle parental** : profils de contrôle parental.
 
-Home Assistant ne démarre pas nativement sous Windows : y lancer plutôt un conteneur, avec
-l'intégration montée en direct (redémarrer le conteneur après une modification du code) :
+Home Assistant Core 2026.8 ou plus récent est requis. Si l'intégration n'apparaît pas dans la recherche, consulter **Paramètres > Système > Journaux** : la cause la plus probable est une version de Home Assistant trop ancienne.
 
-```powershell
-docker run -d --name ha-freebox-dev -p 8123:8123 -e TZ=Europe/Paris `
-  -v "${PWD}\config:/config" -v "${PWD}\custom_components:/config/custom_components" `
-  ghcr.io/home-assistant/home-assistant:2026.9.4
-```
+## Appareils et entités
 
-Les notes sur l'API Freebox OS sont dans [TECHNIQUE.md](TECHNIQUE.md).
+L'intégration crée quatre types d'appareils :
 
-### Versions et releases
+- **La Freebox** (modèle, firmware, adresse MAC) :
+  - **Connexion Internet** (en ligne / hors ligne) et **Dernière coupure**, avec sa fin et sa durée ;
+  - **Vitesse de téléchargement** et **Vitesse d'envoi** ;
+  - **Données reçues** et **Données envoyées** : les compteurs de la box, en Go ;
+  - **Wi-Fi** (interrupteur), **Redémarrer** (bouton) ;
+  - en diagnostic :
+    - **Signal fibre**, **Puissance optique reçue** et **Puissance optique émise** (en dBm, sur la fibre uniquement) ;
+    - **Démarrée le** : heure du dernier démarrage de la box ;
+    - températures et ventilateur, avec les noms donnés par la box ;
+    - pour chaque port Ethernet et le port SFP : **lien**, **vitesse** et **données reçues / envoyées** ;
+    - **Appels manqués** et **Marquer les appels comme lus** (bouton).
+- **Un appareil par disque** : espace libre de chaque partition.
+- **Un appareil par profil de contrôle parental** :
 
-Les versions sont calculées automatiquement à partir des messages de commit
-([Conventional Commits](https://www.conventionalcommits.org/fr/)) par le workflow
-`.forgejo/workflows/release.yml`, à chaque push sur `main` :
+  | Entité | Rôle |
+  |---|---|
+  | **Accès Internet** (interrupteur) | Éteint : coupe Internet jusqu'à nouvel ordre. Allumé : rétablit l'accès, jusqu'au prochain changement prévu par le planning du profil. |
+  | **Mode** | Autorisé ou Bloqué, tel qu'appliqué en ce moment par la box. |
+  | **Prochain changement** | Fin d'une pause, ou prochain changement du planning. |
+  | **Appareils connectés** | Nombre d'appareils du profil en ligne ; la liste complète est en attribut. |
+  | **Reprendre le planning** (bouton) | Annule une pause ou une autorisation manuelle. |
 
-- `fix: …` ou `perf: …` → version corrective (0.1.**1**) ;
-- `feat: …` → nouvelle fonctionnalité (0.**2**.0) ;
-- `feat!: …` ou un pied de commit `BREAKING CHANGE:` → version majeure (**1**.0.0) ;
-- les autres types (`docs`, `chore`, `refactor`, `test`, `ci`…) ne déclenchent pas de release.
+- **Un traceur de présence par appareil du réseau local**, désactivé par défaut. Il est activé d'office seulement si Home Assistant connaît déjà un appareil avec la même adresse MAC.
 
-Le workflow met à jour `manifest.json`, crée le tag et la release sur brokk ; la copie
-GitHub transforme ensuite le tag en release GitHub (`.github/workflows/release.yml`),
-que HACS propose comme mise à jour.
+Les disques et les profils sont rattachés à l'appareil de la Freebox.
+
+## Bon à savoir
+
+### Contrôle parental
+
+- Les profils se créent et se règlent dans Freebox OS (**Paramètres de la Freebox > Contrôle parental**). Il n'y a rien à configurer dans Home Assistant : chaque profil y apparaît tout seul, y compris ceux créés plus tard, sans redémarrage.
+- Les horaires réguliers restent à régler dans le planning du profil, dans Freebox OS. Home Assistant sert aux exceptions : punition, devoirs, repas…
+- Pour une durée, utiliser les actions **Bloquer l'accès à Internet** (`freebox_os.block_internet`) et **Autoriser l'accès à Internet** (`freebox_os.allow_internet`), qui ciblent l'interrupteur « Accès Internet » d'un ou plusieurs profils. À l'échéance, la box revient d'elle-même au planning. **Reprendre le planning** (`freebox_os.resume_schedule`) l'y ramène tout de suite.
+
+  ```yaml
+  # Couper Internet pendant le dîner
+  action: freebox_os.block_internet
+  target:
+    entity_id: switch.alice_acces_internet
+  data:
+    duration: "01:00:00"
+  ```
+
+- Un profil supprimé dans Freebox OS passe en « indisponible ». Vous pouvez alors supprimer son appareil depuis sa fiche dans Home Assistant.
+
+### Droits de l'application
+
+Sans un droit, les entités qui en dépendent ne sont pas créées, et un avertissement l'indique dans les journaux. Après avoir accordé le droit dans Freebox OS, recharger l'intégration. Si l'application est supprimée dans Freebox OS, Home Assistant propose de refaire l'appairage.
+
+### Redémarrage de la box
+
+Les compteurs de la box (données reçues et envoyées, trafic des ports) et son journal de connexion repartent de zéro à chaque redémarrage. Les statistiques et les `utility_meter` de Home Assistant le gèrent : rien n'est perdu. En revanche, **Dernière coupure** ne connaît que les coupures survenues depuis le dernier démarrage, et un redémarrage n'y compte pas comme une coupure.
+
+### Modèles de Freebox
+
+L'intégration est développée et testée sur une Freebox Ultra (v9). Une fonction que la box ne propose pas est simplement absente : pas de capteurs fibre en ADSL/VDSL, pas de compteurs d'appels sans le droit correspondant. La domotique de la Freebox Delta (alarme, caméras) n'est pas prise en charge.
+
+### Cohabitation avec l'intégration officielle
+
+L'intégration peut tourner à côté de l'intégration officielle `freebox`, le temps de reporter les entités dans les tableaux de bord et les automatisations. Les deux déclarent la même adresse MAC pour la box : Home Assistant les regroupe sur un seul appareil, où chaque entité apparaît en double jusqu'à la suppression de l'intégration officielle.
+
+## Avertissement
+
+Projet non affilié à Free ni à Iliad. L'intégration repose sur l'API locale de Freebox OS, dont une partie n'est pas documentée et peut changer avec les mises à jour de la box.
+
+## Pour les développeurs
+
+Le fonctionnement de l'API, l'environnement de développement, les tests et le processus de release sont décrits dans [TECHNIQUE.md](https://github.com/Xaoimoon/ha-freebox/blob/main/TECHNIQUE.md).
 
 ## Licence
 
-[MIT](LICENSE)
+MIT — voir [LICENSE](https://github.com/Xaoimoon/ha-freebox/blob/main/LICENSE).

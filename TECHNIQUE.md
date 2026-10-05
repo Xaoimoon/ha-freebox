@@ -1,8 +1,25 @@
-# Notes techniques : API Freebox OS
+# Documentation technique
 
-Notes de travail pour la cartographie de l'API. Tout ce qui n'est pas marqué
-**vérifié** est à confirmer sur la Freebox de la maison (Ultra, v9), avec la version de
-Freebox OS du moment, avant d'être utilisé dans le code.
+Fonctionnement de l'intégration, notes sur l'API Freebox OS, développement et releases.
+Côté API, tout ce qui n'est pas marqué **vérifié** est à confirmer sur une vraie Freebox
+(référence : Freebox Ultra v9), avec la version de Freebox OS du moment, avant d'être utilisé
+dans le code.
+
+## Fonctionnement de l'intégration
+
+- `api.py` : client HTTP de l'API locale (session aiohttp partagée de Home Assistant). Il lit
+  `/api_version` à chaque démarrage pour construire le préfixe versionné, ouvre la session à
+  la première requête et la rouvre une fois si la box répond `auth_required`.
+- `config_flow.py` : appairage par jeton d'application (saisie de l'hôte ou découverte
+  zeroconf `_fbx-api._tcp`, attente de la validation sur l'écran de la box dans une étape de
+  progression, réappairage si le jeton est révoqué). La box est identifiée par son `uid`.
+- `coordinator.py` : un relevé complet toutes les 30 s (système, connexion et journal, fibre
+  en FTTH, ports du switch et leurs compteurs, disques, appareils du LAN, appels, Wi-Fi,
+  profils de contrôle parental). Une lecture refusée faute de droit (`insufficient_rights`)
+  désactive la partie concernée jusqu'au prochain chargement, sans faire échouer le relevé.
+- Plateformes `sensor`, `binary_sensor`, `switch`, `button`, `device_tracker` ; `parental.py`
+  regroupe les appareils et entités des profils de contrôle parental (ajoutés à la volée),
+  `services.py` les actions `block_internet` / `allow_internet` / `resume_schedule`.
 
 ## Découverte
 
@@ -34,7 +51,7 @@ l'entrée de configuration de Home Assistant (`.storage`), jamais dans Git ni da
 En HTTPS, la Freebox présente un certificat signé par l'autorité de Free : la chaîne doit
 être fournie au client HTTP, ne pas désactiver la vérification.
 
-## Domaines de l'API à cartographier
+## Endpoints de l'API
 
 | Domaine | Intérêt | Sur la v9 |
 |---|---|---|
@@ -47,8 +64,24 @@ En HTTPS, la Freebox présente un certificat signé par l'autorité de Free : la
 | `switch/port/{id}/stats/` | Compteurs du port, vus de la box : `rx_good_bytes` / `tx_bytes`, débits, erreurs | **vérifié** ; `switch/port/` sans id renvoie 404 |
 | `storage/disk/` | Disques et partitions (NVMe 2 To « Nas »), température | **vérifié** |
 | `wifi/state/`, `wifi/ap/` | Wi-Fi de la box | **vérifié** : désactivé (le Wi-Fi passe par les eero) |
-| `call/` | Journal d'appels | à vérifier |
+| `call/log/` | Journal d'appels (`type` missed/accepted/outgoing, `new`) ; `call/log/mark_all_as_read/` (POST) | **vérifié** |
+| `wifi/config/` | Wi-Fi global : `enabled` (PUT pour l'activer ou le couper) | **vérifié** |
+| `network_control/` | Profils de contrôle parental : `current_mode`, `rule_mode`, `override*`, `next_change`, appareils (`hosts`) | **vérifié** ; le PUT exige le profil complet (voir ci-dessous) |
+| `ws/event` | WebSocket d'événements (`register` puis notifications `lan_host_l3addr_reachable/unreachable`…) | **vérifié**, non utilisé : un événement par adresse IPv4/IPv6, très bavard |
 | `home/` | Domotique (alarme, capteurs) | **absent : 404 (vérifié le 2026-10-05)**, propre à la Delta |
+
+### Contrôle parental
+
+Les actions reprennent celles de l'interface Freebox OS (`NetworkControlModel.doAction`) :
+pause = `override: true`, `override_mode: "denied"`, `override_until` (timestamp, 0 = sans
+limite) ; accès manuel = `override_mode: "allowed"`, jusqu'à l'échéance ou au `next_change` du
+planning ; retour au planning = `override: false`. La box refuse un PUT partiel (« Liste
+d'adresses MAC manquante ») : il faut renvoyer `profile_name`, `profile_icon`,
+`override_mode`, `current_mode`, `override_until`, `override`, `macs` et `cdayranges`. À
+l'échéance d'une pause, la box repasse d'elle-même `override` à false (**vérifié** sur une
+pause d'une minute).
+
+### Inventaire
 
 Inventaire plus large : le dépôt `orbital` (`src/debug/`) contient le bundle ExtJS de
 l'interface Freebox OS (`freebox.js`) et la liste des 167 endpoints qui en sont extraits
@@ -77,3 +110,60 @@ Les compteurs cumulés de la box sont exposés : capteurs « Données reçues »
 
 Restent ensuite à reporter les `entity_id` dans les tableaux de bord, les automations et les
 filtres du recorder.
+
+## Développement
+
+Les scripts de `scripts/` suivent [ludeeus/integration_blueprint](https://github.com/ludeeus/integration_blueprint).
+Ils se lancent dans un environnement virtuel Python 3.14 (Linux, macOS ou WSL) :
+
+```bash
+scripts/setup     # installe Home Assistant (même version que la production)
+scripts/test      # lance les tests
+scripts/develop   # démarre un Home Assistant de test avec l'intégration, dans ./config
+```
+
+Home Assistant ne démarre pas nativement sous Windows : y lancer plutôt un conteneur, avec
+l'intégration montée en direct (redémarrer le conteneur après une modification du code) :
+
+```powershell
+docker run -d --name ha-freebox-dev -p 8123:8123 -e TZ=Europe/Paris `
+  -v "${PWD}\config:/config" -v "${PWD}\custom_components:/config/custom_components" `
+  ghcr.io/home-assistant/home-assistant:2026.9.4
+```
+
+Le dossier `config/` (gitignored) contient alors l'entrée de configuration et le jeton
+d'application : ne jamais le committer. Pour tester un comportement propre à une version de
+Home Assistant (par exemple le renommage des appareils par les `ScannerEntity` depuis la
+2026.9), vérifier dans ce conteneur et pas seulement avec la version installée localement.
+
+### Tests
+
+```bash
+scripts/test
+```
+
+Suite pytest ciblée : `api.py` (HTTP, session, erreurs, mockés avec `aioresponses`, sans
+appel réseau), coordinateur, entités, contrôle parental, connexion et ports, testés contre
+des réponses réelles de la box anonymisées (`tests/fixtures/` : IP, MAC, numéros de série,
+noms d'appareils et de profils remplacés). Pas de tests du config flow, qui demanderaient
+`pytest-homeassistant-custom-component`.
+
+## Releases
+
+Les versions sont calculées automatiquement à partir des messages de commit
+([Conventional Commits](https://www.conventionalcommits.org/fr/)) par le workflow
+`.forgejo/workflows/release.yml`, à chaque push sur `main` :
+
+- `fix: …` ou `perf: …` → version corrective (0.1.**1**) ;
+- `feat: …` → nouvelle fonctionnalité (0.**2**.0) ;
+- `feat!: …` ou un pied de commit `BREAKING CHANGE:` → version majeure (**1**.0.0) ;
+- les autres types (`docs`, `chore`, `refactor`, `test`, `ci`…) ne déclenchent pas de release.
+
+`python scripts/bump_version.py --dry-run` affiche la prochaine version sans rien modifier.
+Le workflow met à jour `manifest.json`, crée le tag et la release sur brokk.
+
+### Releases GitHub et HACS
+
+Le dépôt principal est sur [brokk](https://brokk.xaoimoon.fr/xaoimoon/ha-freebox) ; GitHub en
+est une copie (miroir push), utilisée par HACS. Le workflow `.github/workflows/release.yml`
+transforme chaque tag reçu en release GitHub, que HACS propose comme mise à jour.
