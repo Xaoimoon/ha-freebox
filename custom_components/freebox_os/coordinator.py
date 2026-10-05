@@ -24,6 +24,9 @@ from .const import DOMAIN
 _LOGGER = logging.getLogger(__name__)
 
 SCAN_INTERVAL = timedelta(seconds=30)
+# Après un refus faute de droit, délai avant de redemander : le droit peut être
+# accordé (ou rétabli) dans Freebox OS à tout moment, sans recharger.
+PERMISSION_RETRY = timedelta(minutes=10)
 
 
 @dataclass
@@ -63,12 +66,11 @@ class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
             update_interval=SCAN_INTERVAL,
         )
         self.api = api
-        # Désactivés pour la session HA au premier refus : inutile de
-        # redemander toutes les 30 s ce que la box ne fournira pas.
+        # Pas de liste d'hôtes en mode bridge : définitif pour la session HA.
         self.supports_hosts = True
-        self.supports_calls = True
-        self.supports_wifi = True
-        self.supports_profiles = True
+        # Parties refusées faute de droit, et heure à partir de laquelle
+        # redemander (inutile de le faire toutes les 30 s).
+        self.denied_until: dict[str, datetime] = {}
 
     async def _async_update_data(self) -> FreeboxData:
         try:
@@ -86,30 +88,43 @@ class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
             data.raids = {raid["id"]: raid for raid in await self.api.get_storage_raids()}
             if self.supports_hosts:
                 data.hosts = await self._fetch_hosts()
-            if self.supports_calls:
-                data.calls = await self._optional(self.api.get_call_log, "supports_calls", "calls")
-            if self.supports_wifi:
-                data.wifi = await self._optional(self.api.get_wifi_config, "supports_wifi", "settings")
-            if self.supports_profiles:
-                profiles = await self._optional(self.api.get_network_control, "supports_profiles", "parental")
-                if profiles is not None:
-                    data.profiles = {p["profile_id"]: p for p in profiles}
+            data.calls = await self._optional(self.api.get_call_log, "calls")
+            data.wifi = await self._optional(self.api.get_wifi_config, "settings")
+            profiles = await self._optional(self.api.get_network_control, "parental")
+            if profiles is not None:
+                data.profiles = {p["profile_id"]: p for p in profiles}
         except FreeboxAuthError as err:
             raise ConfigEntryAuthFailed(str(err)) from err
         except FreeboxApiError as err:
             raise UpdateFailed(str(err)) from err
         return data
 
-    async def _optional(self, fetch, flag: str, permission: str) -> Any:
-        """Lecture soumise à un droit de l'application : None si refusée."""
-        try:
-            return await fetch()
-        except FreeboxPermissionError:
-            _LOGGER.warning(
-                "Droit « %s » non accordé à l'application dans Freebox OS : entités désactivées", permission
-            )
-            setattr(self, flag, False)
+    async def _optional(self, fetch, permission: str) -> Any:
+        """Lecture soumise à un droit de l'application : None si refusée.
+
+        Un refus n'est pas définitif (droit réglé juste après l'appairage,
+        accordé plus tard) : on redemande toutes les PERMISSION_RETRY, en ne
+        prévenant qu'au premier refus.
+        """
+        now = dt_util.utcnow()
+        retry_at = self.denied_until.get(permission)
+        if retry_at is not None and now < retry_at:
             return None
+        try:
+            result = await fetch()
+        except FreeboxPermissionError:
+            if retry_at is None:
+                _LOGGER.warning(
+                    "Droit « %s » non accordé à l'application dans Freebox OS : entités "
+                    "indisponibles, nouvel essai toutes les %d min",
+                    permission,
+                    PERMISSION_RETRY.total_seconds() // 60,
+                )
+            self.denied_until[permission] = now + PERMISSION_RETRY
+            return None
+        if self.denied_until.pop(permission, None) is not None:
+            _LOGGER.info("Droit « %s » de nouveau accordé dans Freebox OS", permission)
+        return result
 
     async def _fetch_hosts(self) -> dict[str, dict[str, Any]]:
         hosts: dict[str, dict[str, Any]] = {}

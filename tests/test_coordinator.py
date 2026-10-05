@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock
+from datetime import timedelta
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from homeassistant.exceptions import ConfigEntryAuthFailed
@@ -16,7 +17,8 @@ from custom_components.freebox_os.api import (
     FreeboxConnectionError,
     FreeboxPermissionError,
 )
-from custom_components.freebox_os.coordinator import FreeboxDataUpdateCoordinator
+from custom_components.freebox_os.coordinator import PERMISSION_RETRY, FreeboxDataUpdateCoordinator
+from homeassistant.util import dt as dt_util
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -61,19 +63,31 @@ async def test_full_snapshot():
 
 
 @pytest.mark.asyncio
-async def test_missing_permissions_disable_optional_parts():
+async def test_missing_permissions_are_retried_later(caplog):
     api = make_api()
     api.get_call_log.side_effect = FreeboxPermissionError("x", "insufficient_rights")
     api.get_wifi_config.side_effect = FreeboxPermissionError("x", "insufficient_rights")
     coordinator = make_coordinator(api)
+    now = dt_util.utcnow()
 
-    data = await coordinator._async_update_data()
+    with patch("custom_components.freebox_os.coordinator.dt_util.utcnow", return_value=now):
+        data = await coordinator._async_update_data()
     assert data.calls is None and data.wifi is None
 
-    # Plus redemandé aux relevés suivants.
-    await coordinator._async_update_data()
+    # Pas redemandé aux relevés suivants…
+    with patch("custom_components.freebox_os.coordinator.dt_util.utcnow", return_value=now + timedelta(minutes=5)):
+        await coordinator._async_update_data()
     assert api.get_call_log.await_count == 1
-    assert api.get_wifi_config.await_count == 1
+
+    # … mais 10 minutes plus tard, et le droit a été accordé entre-temps pour les appels.
+    api.get_call_log.side_effect = None
+    later = now + PERMISSION_RETRY + timedelta(seconds=1)
+    with patch("custom_components.freebox_os.coordinator.dt_util.utcnow", return_value=later):
+        data = await coordinator._async_update_data()
+    assert data.calls and data.wifi is None
+    assert "calls" not in coordinator.denied_until and "settings" in coordinator.denied_until
+    # Un seul avertissement par droit, pas un toutes les 10 minutes.
+    assert sum("non accordé" in r.message for r in caplog.records) == 2
 
 
 @pytest.mark.asyncio

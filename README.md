@@ -111,7 +111,7 @@ Les disques et les profils sont rattachés à l'appareil de la Freebox.
 
 ### Droits de l'application
 
-Sans un droit, les entités qui en dépendent ne sont pas créées, et un avertissement l'indique dans les journaux. Après avoir accordé le droit dans Freebox OS, recharger l'intégration. Si l'application est supprimée dans Freebox OS, Home Assistant propose de refaire l'appairage.
+Sans un droit, un avertissement l'indique dans les journaux et l'intégration redemande toutes les 10 minutes : il n'y a rien à faire après avoir accordé le droit dans Freebox OS. Les profils de contrôle parental apparaissent alors d'eux-mêmes ; en revanche, si le droit manquait dès l'ajout de l'intégration, l'interrupteur Wi-Fi, le bouton de redémarrage et les appels manqués n'apparaissent qu'après avoir rechargé l'intégration. Si l'application est supprimée dans Freebox OS, Home Assistant propose de refaire l'appairage.
 
 ### Redémarrage de la box
 
@@ -123,7 +123,7 @@ L'intégration est développée et testée sur une Freebox Ultra (v9). Une fonct
 
 ### Cohabitation avec l'intégration officielle
 
-L'intégration peut tourner à côté de l'intégration officielle `freebox`, le temps de reporter les entités dans les tableaux de bord et les automatisations. Les deux déclarent la même adresse MAC pour la box : Home Assistant les regroupe sur un seul appareil, où chaque entité apparaît en double jusqu'à la suppression de l'intégration officielle.
+L'intégration peut tourner à côté de l'intégration officielle `freebox`, le temps de reporter les entités dans les tableaux de bord et les automatisations. Chacune a son propre appareil « Freebox » : la box apparaît donc deux fois dans la liste des appareils jusqu'à la suppression de l'intégration officielle, et les identifiants d'entités de cette intégration sont préfixés par le nom du modèle (par exemple `sensor.freebox_v9_r1_vitesse_d_envoi`).
 
 ## Avertissement
 

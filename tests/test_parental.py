@@ -87,10 +87,9 @@ async def test_coordinator_collects_profiles():
     assert set(data.profiles) == {1, 2}
 
     api.get_network_control.side_effect = FreeboxPermissionError("x", "insufficient_rights")
-    coordinator.supports_profiles = True
     data = await coordinator._async_update_data()
     assert data.profiles is None
-    assert coordinator.supports_profiles is False
+    assert "parental" in coordinator.denied_until
 
 
 @pytest.mark.asyncio

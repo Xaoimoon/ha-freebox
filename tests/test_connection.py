@@ -136,7 +136,9 @@ async def test_coordinator_reads_fiber_only_on_ftth():
     api.get_storage_raids.return_value = []
     api.get_lan_interfaces.return_value = []
     coordinator = FreeboxDataUpdateCoordinator(MagicMock(), MagicMock(), api)
-    coordinator.supports_calls = coordinator.supports_wifi = coordinator.supports_profiles = False
+    api.get_call_log.return_value = []
+    api.get_wifi_config.return_value = None
+    api.get_network_control.return_value = []
 
     data = await coordinator._async_update_data()
     assert data.ftth is None
