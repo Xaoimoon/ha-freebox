@@ -1,0 +1,34 @@
+{
+  "entity": {
+    "button": {
+      "mark_calls_as_read": {
+        "default": "mdi:phone-check"
+      }
+    },
+    "sensor": {
+      "missed": {
+        "default": "mdi:phone-missed"
+      },
+      "partition_free_space": {
+        "default": "mdi:harddisk"
+      },
+      "rate_down": {
+        "default": "mdi:download-network"
+      },
+      "rate_up": {
+        "default": "mdi:upload-network"
+      },
+      "fan_speed": {
+        "default": "mdi:fan"
+      }
+    },
+    "switch": {
+      "wifi": {
+        "default": "mdi:wifi",
+        "state": {
+          "off": "mdi:wifi-off"
+        }
+      }
+    }
+  }
+}

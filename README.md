@@ -10,8 +10,23 @@ les versions récentes de Freebox OS : par exemple, sur une Freebox Ultra (v9), 
 domotique `home/*` n'existe pas et l'intégration officielle le signale à tort comme un
 problème de permission.
 
-> **En développement : l'intégration n'est pas encore installable.** Ce dépôt ne contient
-> pour l'instant que le squelette (manifeste, outillage de release, tests).
+> **En développement.** La première version reprend les entités de l'intégration officielle ;
+> les fonctions propres à cette intégration arrivent ensuite (voir les objectifs).
+
+## Fonctionnalités
+
+Un appareil pour la Freebox, avec :
+
+- débits montant et descendant (ko/s) ;
+- températures et ventilateurs annoncés par la box (diagnostic) ;
+- appels manqués non lus, et un bouton pour marquer le journal d'appels comme lu ;
+- un bouton de redémarrage et un interrupteur pour le Wi-Fi de la box ;
+- le suivi de la box elle-même (connexion, IPv4/IPv6, uptime en attributs).
+
+Un appareil par disque, avec l'espace libre de chaque partition.
+
+Un traceur de présence (`device_tracker`) par appareil vu sur le réseau local, désactivé par
+défaut sauf si Home Assistant connaît déjà un appareil avec la même adresse MAC.
 
 ## Objectifs
 
@@ -23,13 +38,28 @@ problème de permission.
   Freebox ne propose pas est ignorée, pas signalée comme une erreur.
 - Fonctionnement en local uniquement (`local_polling`), sans compte en ligne.
 
+## Configuration
+
+1. **Paramètres > Appareils et services > Ajouter une intégration**, choisir **Freebox OS**
+   (la Freebox est aussi découverte automatiquement sur le réseau local).
+2. Garder l'hôte `mafreebox.freebox.fr` et le port `80`, ou saisir l'adresse IP de la box.
+3. Valider, puis accepter la demande d'accès **sur l'écran de la Freebox** (flèche de droite).
+4. Dans Freebox OS (**Paramètres de la Freebox > Gestion des accès > Applications**), accorder à
+   l'application « Home Assistant (Freebox OS) » :
+   - **Modification des réglages de la Freebox** : redémarrage et Wi-Fi ;
+   - **Accès au gestionnaire d'appels** : journal d'appels.
+
+   Sans ces droits, les entités concernées ne sont pas créées.
+
+Si l'application est révoquée dans Freebox OS, Home Assistant propose de refaire l'appairage.
+
 ## Cohabitation avec l'intégration officielle
 
 Le domaine de cette intégration est **`freebox_os`** : elle peut être installée à côté de
 l'intégration officielle `freebox`, le temps de reporter les entités utilisées par les
 tableaux de bord et les automations, avant de supprimer l'officielle.
 
-## Installation (quand une première version sera publiée)
+## Installation
 
 ### Via HACS
 
@@ -54,6 +84,15 @@ en est une copie, utilisée par HACS.
 scripts/setup     # installe Home Assistant (même version que la production)
 scripts/test      # lance les tests
 scripts/develop   # démarre un Home Assistant de test avec l'intégration, dans ./config
+```
+
+Home Assistant ne démarre pas nativement sous Windows : y lancer plutôt un conteneur, avec
+l'intégration montée en direct (redémarrer le conteneur après une modification du code) :
+
+```powershell
+docker run -d --name ha-freebox-dev -p 8123:8123 -e TZ=Europe/Paris `
+  -v "${PWD}\config:/config" -v "${PWD}\custom_components:/config/custom_components" `
+  ghcr.io/home-assistant/home-assistant:2026.9.4
 ```
 
 Les notes sur l'API Freebox OS sont dans [TECHNIQUE.md](TECHNIQUE.md).

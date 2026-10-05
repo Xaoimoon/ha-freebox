@@ -1,0 +1,12 @@
+{
+  "box_model_name": "Freebox v9 (r1)",
+  "api_base_url": "/api/",
+  "https_port": 13812,
+  "device_name": "Freebox Server",
+  "https_available": true,
+  "box_model": "fbxgw9-r1",
+  "api_domain": "abcd1234.fbxos.fr",
+  "uid": "00000000000000000000000000000000",
+  "api_version": "16.0",
+  "device_type": "FreeboxServer9,1"
+}

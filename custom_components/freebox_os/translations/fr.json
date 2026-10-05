@@ -1,0 +1,65 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Freebox OS",
+        "description": "Adresse de la Freebox sur le réseau local.",
+        "data": {
+          "host": "Hôte",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "Nom d'hôte ou adresse IP de la Freebox (`mafreebox.freebox.fr` par défaut).",
+          "port": "Port HTTP de l'API locale (80)."
+        }
+      },
+      "link": {
+        "title": "Appairer la {name}",
+        "description": "Sélectionnez **Valider**, puis acceptez la demande d'accès de Home Assistant sur l'écran de la Freebox (flèche de droite).\n\nEnsuite, dans Freebox OS (Paramètres de la Freebox › Gestion des accès › Applications), accordez à l'application le droit **Modification des réglages de la Freebox** pour le redémarrage et le Wi-Fi, et **Accès au gestionnaire d'appels** pour le journal d'appels."
+      }
+    },
+    "progress": {
+      "wait_for_validation": "Validez la demande d'accès sur l'écran de la {name}…"
+    },
+    "error": {
+      "cannot_connect": "Impossible de joindre la Freebox",
+      "not_a_freebox": "Cet hôte ne répond pas comme une Freebox",
+      "register_failed": "L'appairage a échoué, réessayez",
+      "auth_denied": "La demande a été refusée sur la Freebox",
+      "auth_timeout": "La demande n'a pas été validée à temps sur la Freebox"
+    },
+    "abort": {
+      "already_configured": "Cette Freebox est déjà configurée",
+      "cannot_connect": "Impossible de joindre la Freebox",
+      "not_a_freebox": "Service découvert incomplet : configurez la Freebox manuellement",
+      "reauth_successful": "Nouvel appairage réussi"
+    }
+  },
+  "entity": {
+    "button": {
+      "mark_calls_as_read": {
+        "name": "Marquer les appels comme lus"
+      }
+    },
+    "sensor": {
+      "missed": {
+        "name": "Appels manqués"
+      },
+      "partition_free_space": {
+        "name": "Espace libre {partition}"
+      },
+      "rate_down": {
+        "name": "Vitesse de téléchargement"
+      },
+      "rate_up": {
+        "name": "Vitesse d'envoi"
+      }
+    },
+    "switch": {
+      "wifi": {
+        "name": "Wi-Fi"
+      }
+    }
+  }
+}

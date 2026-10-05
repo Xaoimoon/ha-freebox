@@ -1,0 +1,81 @@
+{
+  "success": true,
+  "result": {
+    "mac": "00:00:5E:00:53:00",
+    "usb3_enable": true,
+    "board_name": "fbxgw9r",
+    "model_info": {
+      "net_operator": "free_fra",
+      "led_strip_revision": 0,
+      "customer_hdd_slots": 1,
+      "wifi_country": "FR",
+      "wifi_type": "2d4_5g_5g_6g",
+      "pretty_name": "Freebox v9 (r1)",
+      "has_separate_internal_storage": true,
+      "has_eco_wifi": true,
+      "has_basic_raid_support": false,
+      "has_standby": true,
+      "has_lcd_orientation": true,
+      "has_vm": true,
+      "has_status_led": true,
+      "supported_languages": [
+        "fra",
+        "eng",
+        "ita"
+      ],
+      "name": "fbxgw9-r1",
+      "has_lan_sfp": true,
+      "internal_hdd_size": 0,
+      "default_language": "fra",
+      "has_wop": true,
+      "has_usb3_enable": true
+    },
+    "fans": [
+      {
+        "id": "fan0_speed",
+        "name": "Ventilateur 1",
+        "value": 0
+      }
+    ],
+    "sensors": [
+      {
+        "id": "temp_cpu1",
+        "name": "Température CPU 1",
+        "value": 58
+      },
+      {
+        "id": "temp_cpu3",
+        "name": "Température CPU 3",
+        "value": 57
+      },
+      {
+        "id": "temp_cpu0",
+        "name": "Température CPU 0",
+        "value": 57
+      },
+      {
+        "id": "temp_cpu2",
+        "name": "Température CPU 2",
+        "value": 58
+      },
+      {
+        "id": "temp_hdd",
+        "name": "Disque dur",
+        "value": 53
+      },
+      {
+        "id": "temp_t1",
+        "name": "Température 1",
+        "value": 53
+      }
+    ],
+    "user_storage_powered": true,
+    "disk_status": "active",
+    "uptime": "46 jours 5 heures 18 minutes 50 secondes",
+    "uptime_val": 3993530,
+    "user_main_storage": "Nas",
+    "box_authenticated": true,
+    "serial": "REDACTED",
+    "firmware_version": "4.12.3"
+  }
+}

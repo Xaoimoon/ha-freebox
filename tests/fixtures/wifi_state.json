@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "result": {
+    "state": "disabled",
+    "power_saving_capability": "supported",
+    "expected_phys": [
+      {
+        "band": "2d4g",
+        "phy_id": 0,
+        "detected": true
+      },
+      {
+        "band": "5g",
+        "phy_id": 1,
+        "detected": true
+      },
+      {
+        "band": "5g",
+        "phy_id": 10,
+        "detected": true
+      },
+      {
+        "band": "6g",
+        "phy_id": 11,
+        "detected": true
+      }
+    ]
+  }
+}

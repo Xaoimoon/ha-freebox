@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "result": {
+    "sfp_has_power_report": true,
+    "sfp_has_signal": true,
+    "sfp_model": "LTF7219-BC+1",
+    "link_type": "pon",
+    "sfp_pwr_rx": -1812,
+    "sfp_vendor": "Hisense",
+    "sfp_pwr_tx": 641,
+    "has_sfp": true,
+    "link": true,
+    "sfp_alim_ok": true,
+    "sfp_serial": "REDACTED",
+    "sfp_present": true
+  }
+}

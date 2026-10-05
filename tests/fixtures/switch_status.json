@@ -1,0 +1,239 @@
+{
+  "success": true,
+  "result": [
+    {
+      "duplex": "half",
+      "name": "Ethernet 3",
+      "link": "down",
+      "id": 3,
+      "mode": "10BaseT-HD",
+      "speed": "10",
+      "rrd_id": "3"
+    },
+    {
+      "duplex": "half",
+      "name": "Ethernet 1",
+      "link": "down",
+      "id": 1,
+      "mode": "10BaseT-HD",
+      "speed": "10",
+      "rrd_id": "1"
+    },
+    {
+      "duplex": "full",
+      "mac_list": [
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        }
+      ],
+      "name": "Ethernet 2",
+      "link": "up",
+      "id": 2,
+      "mode": "1000BaseT-FD",
+      "speed": "1000",
+      "rrd_id": "2"
+    },
+    {
+      "duplex": "full",
+      "mac_list": [
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        },
+        {
+          "mac": "00:00:5E:00:53:01",
+          "hostname": "host"
+        }
+      ],
+      "name": "Ethernet 4",
+      "link": "up",
+      "id": 4,
+      "mode": "2500BaseT-FD",
+      "speed": "2500",
+      "rrd_id": "4"
+    },
+    {
+      "duplex": "auto",
+      "mac_list": {},
+      "name": "Sfp lan",
+      "link": "down",
+      "id": 9999,
+      "mode": "0-FD",
+      "speed": "0",
+      "rrd_id": "sfp_lan"
+    }
+  ]
+}

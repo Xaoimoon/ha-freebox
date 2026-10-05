@@ -1,0 +1,8 @@
+{
+  "success": true,
+  "result": {
+    "enabled": false,
+    "power_saving": true,
+    "mac_filter_state": "disabled"
+  }
+}

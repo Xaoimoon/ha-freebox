@@ -1,0 +1,20 @@
+{
+  "success": true,
+  "result": {
+    "type": "ethernet",
+    "rate_down": 425012,
+    "bytes_up": 463495916561,
+    "ipv4_port_range": [
+      0,
+      65535
+    ],
+    "rate_up": 9570,
+    "bandwidth_up": 8000000000,
+    "ipv6": "2001:db8::1",
+    "bandwidth_down": 8000000000,
+    "media": "ftth",
+    "state": "up",
+    "bytes_down": 6081198020471,
+    "ipv4": "192.0.2.1"
+  }
+}

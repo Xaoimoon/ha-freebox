@@ -1,0 +1,65 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Freebox OS",
+        "description": "Address of the Freebox on the local network.",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "Hostname or IP address of the Freebox (`mafreebox.freebox.fr` by default).",
+          "port": "HTTP port of the local API (80)."
+        }
+      },
+      "link": {
+        "title": "Pair the {name}",
+        "description": "Select **Submit**, then accept Home Assistant's access request on the Freebox display (right arrow).\n\nThen, in Freebox OS (Freebox settings › Access management › Applications), grant the app the **Freebox settings modification** permission for reboot and Wi-Fi, and **Calls manager access** for the call log."
+      }
+    },
+    "progress": {
+      "wait_for_validation": "Accept the access request on the {name} display…"
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the Freebox",
+      "not_a_freebox": "This host does not answer like a Freebox",
+      "register_failed": "Pairing failed, please try again",
+      "auth_denied": "The request was denied on the Freebox",
+      "auth_timeout": "The request was not accepted in time on the Freebox"
+    },
+    "abort": {
+      "already_configured": "This Freebox is already configured",
+      "cannot_connect": "Failed to connect to the Freebox",
+      "not_a_freebox": "Incomplete discovered service: configure the Freebox manually",
+      "reauth_successful": "Re-pairing successful"
+    }
+  },
+  "entity": {
+    "button": {
+      "mark_calls_as_read": {
+        "name": "Mark calls as read"
+      }
+    },
+    "sensor": {
+      "missed": {
+        "name": "Missed calls"
+      },
+      "partition_free_space": {
+        "name": "{partition} free space"
+      },
+      "rate_down": {
+        "name": "Download speed"
+      },
+      "rate_up": {
+        "name": "Upload speed"
+      }
+    },
+    "switch": {
+      "wifi": {
+        "name": "Wi-Fi"
+      }
+    }
+  }
+}

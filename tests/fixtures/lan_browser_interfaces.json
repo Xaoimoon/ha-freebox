@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "result": [
+    {
+      "name": "pub",
+      "host_count": 128
+    },
+    {
+      "name": "wifiguest",
+      "host_count": 0
+    }
+  ]
+}

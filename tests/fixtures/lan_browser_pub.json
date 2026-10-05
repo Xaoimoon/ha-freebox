@@ -1,0 +1,119 @@
+{
+  "success": true,
+  "result": [
+    {
+      "l2ident": {
+        "id": "00:00:5E:00:53:10",
+        "type": "mac_address"
+      },
+      "active": true,
+      "persistent": true,
+      "names": [
+        {
+          "name": "nas",
+          "source": "dhcp"
+        }
+      ],
+      "vendor_name": "Example",
+      "host_type": "nas",
+      "domain_name": "nas.home",
+      "info": {},
+      "l3connectivities": [
+        {
+          "addr": "192.168.1.10",
+          "af": "ipv4",
+          "active": true,
+          "reachable": true,
+          "last_activity": 1791230365,
+          "last_time_reachable": 1791230365
+        }
+      ],
+      "id": "ether-00:00:5e:00:53:10",
+      "last_time_reachable": 1791230365,
+      "primary_name_manual": true,
+      "access_point": {},
+      "interface": "pub",
+      "default_name": "nas",
+      "first_activity": 1774432488,
+      "reachable": true,
+      "last_activity": 1791230365,
+      "primary_name": "nas"
+    },
+    {
+      "l2ident": {
+        "id": "00:00:5E:00:53:11",
+        "type": "mac_address"
+      },
+      "active": false,
+      "persistent": true,
+      "names": [
+        {
+          "name": "phone",
+          "source": "dhcp"
+        }
+      ],
+      "vendor_name": "Example",
+      "host_type": "smartphone",
+      "domain_name": "phone.home",
+      "info": {},
+      "l3connectivities": [
+        {
+          "addr": "192.168.1.11",
+          "af": "ipv4",
+          "active": false,
+          "reachable": false,
+          "last_activity": 1791230365,
+          "last_time_reachable": 1791230365
+        }
+      ],
+      "id": "ether-00:00:5e:00:53:11",
+      "last_time_reachable": 1791230365,
+      "primary_name_manual": true,
+      "access_point": {},
+      "interface": "pub",
+      "default_name": "phone",
+      "first_activity": 1774432488,
+      "reachable": false,
+      "last_activity": 1791230365,
+      "primary_name": "phone"
+    },
+    {
+      "l2ident": {
+        "id": "00:00:5E:00:53:12",
+        "type": "mac_address"
+      },
+      "active": true,
+      "persistent": true,
+      "names": [
+        {
+          "name": "  ",
+          "source": "dhcp"
+        }
+      ],
+      "vendor_name": "Example",
+      "host_type": "other",
+      "domain_name": "host.home",
+      "info": {},
+      "l3connectivities": [
+        {
+          "addr": "192.168.1.12",
+          "af": "ipv4",
+          "active": true,
+          "reachable": true,
+          "last_activity": 1791230365,
+          "last_time_reachable": 1791230365
+        }
+      ],
+      "id": "ether-00:00:5e:00:53:12",
+      "last_time_reachable": 1791230365,
+      "primary_name_manual": true,
+      "access_point": {},
+      "interface": "pub",
+      "default_name": "  ",
+      "first_activity": 1774432488,
+      "reachable": true,
+      "last_activity": 1791230365,
+      "primary_name": "  "
+    }
+  ]
+}
