@@ -7,6 +7,12 @@
           "off": "mdi:web-off"
         }
       },
+      "firmware_update": {
+        "default": "mdi:package-up",
+        "state": {
+          "off": "mdi:package-check"
+        }
+      },
       "ftth_signal": {
         "default": "mdi:signal-variant",
         "state": {

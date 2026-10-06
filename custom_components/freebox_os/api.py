@@ -38,6 +38,7 @@ from .const import (
     SWITCH_STATUS_ENDPOINT,
     SYSTEM_ENDPOINT,
     SYSTEM_REBOOT_ENDPOINT,
+    UPDATE_ENDPOINT,
     WIFI_CONFIG_ENDPOINT,
     WIFI_STATE_ENDPOINT,
 )
@@ -269,6 +270,10 @@ class FreeboxApiClient:
     async def get_system(self) -> dict[str, Any]:
         """Modèle, firmware, uptime, températures et ventilateurs."""
         return await self.request("GET", SYSTEM_ENDPOINT)
+
+    async def get_firmware_update(self) -> dict[str, Any]:
+        """État de la mise à jour du firmware (endpoint non documenté)."""
+        return await self.request("GET", UPDATE_ENDPOINT)
 
     async def get_lan_interfaces(self) -> list[dict[str, Any]]:
         """Interfaces du navigateur LAN (`pub`, `wifiguest`…)."""

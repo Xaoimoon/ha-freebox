@@ -17,6 +17,7 @@ from .api import (
     FreeboxApiClient,
     FreeboxApiError,
     FreeboxAuthError,
+    FreeboxConnectionError,
     FreeboxPermissionError,
 )
 from .const import DOMAIN
@@ -52,6 +53,8 @@ class FreeboxData:
     wifi: dict[str, Any] | None = None
     # Profils de contrôle parental par profile_id ; None sans le droit `parental`.
     profiles: dict[int, dict[str, Any]] | None = None
+    # État de la mise à jour du firmware ; None si la box ne l'expose pas.
+    firmware_update: dict[str, Any] | None = None
 
 
 class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
@@ -68,6 +71,8 @@ class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
         self.api = api
         # Pas de liste d'hôtes en mode bridge : définitif pour la session HA.
         self.supports_hosts = True
+        # `update/` n'est pas documenté : s'il disparaît, on cesse de l'appeler.
+        self.supports_firmware_update = True
         # Parties refusées faute de droit, et heure à partir de laquelle
         # redemander (inutile de le faire toutes les 30 s).
         self.denied_until: dict[str, datetime] = {}
@@ -93,6 +98,8 @@ class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
             profiles = await self._optional(self.api.get_network_control, "parental")
             if profiles is not None:
                 data.profiles = {p["profile_id"]: p for p in profiles}
+            if self.supports_firmware_update:
+                data.firmware_update = await self._fetch_firmware_update()
         except FreeboxAuthError as err:
             raise ConfigEntryAuthFailed(str(err)) from err
         except FreeboxApiError as err:
@@ -125,6 +132,18 @@ class FreeboxDataUpdateCoordinator(DataUpdateCoordinator[FreeboxData]):
         if self.denied_until.pop(permission, None) is not None:
             _LOGGER.info("Droit « %s » de nouveau accordé dans Freebox OS", permission)
         return result
+
+    async def _fetch_firmware_update(self) -> dict[str, Any] | None:
+        # Droit requis inconnu (endpoint non documenté) : vérifié avec une
+        # application qui a le droit `settings`.
+        try:
+            return await self._optional(self.api.get_firmware_update, "settings")
+        except FreeboxConnectionError:
+            raise
+        except FreeboxApiError as err:
+            _LOGGER.debug("État de mise à jour du firmware indisponible : %s", err)
+            self.supports_firmware_update = False
+            return None
 
     async def _fetch_hosts(self) -> dict[str, dict[str, Any]]:
         hosts: dict[str, dict[str, Any]] = {}

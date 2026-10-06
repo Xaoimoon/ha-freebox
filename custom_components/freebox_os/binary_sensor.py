@@ -1,4 +1,5 @@
-"""Capteurs binaires Freebox OS : connexion Internet, signal fibre, liens des ports du switch."""
+"""Capteurs binaires Freebox OS : connexion Internet, signal fibre, mise à jour
+du firmware, liens des ports du switch."""
 
 from __future__ import annotations
 
@@ -16,6 +17,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import FreeboxConfigEntry
+from .const import UPDATE_STATE_UP_TO_DATE
 from .coordinator import FreeboxData, FreeboxDataUpdateCoordinator
 from .entity import FreeboxEntity, FreeboxPortEntity
 
@@ -24,6 +26,7 @@ from .entity import FreeboxEntity, FreeboxPortEntity
 class FreeboxBinarySensorEntityDescription(BinarySensorEntityDescription):
     value_fn: Callable[[FreeboxData], bool | None]
     exists_fn: Callable[[FreeboxData], bool] = lambda data: True
+    attrs_fn: Callable[[FreeboxData], dict[str, Any]] | None = None
 
 
 BINARY_SENSORS: tuple[FreeboxBinarySensorEntityDescription, ...] = (
@@ -41,6 +44,22 @@ BINARY_SENSORS: tuple[FreeboxBinarySensorEntityDescription, ...] = (
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda data: bool(data.ftth.get("sfp_has_signal")) if data.ftth else None,
         exists_fn=lambda data: data.ftth is not None,
+    ),
+    FreeboxBinarySensorEntityDescription(
+        key="firmware_update",
+        translation_key="firmware_update",
+        device_class=BinarySensorDeviceClass.UPDATE,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        # Seul `up_to_date` est connu : tout autre état (téléchargement, attente
+        # de redémarrage…) compte comme une mise à jour en attente.
+        value_fn=lambda data: (
+            data.firmware_update.get("state") != UPDATE_STATE_UP_TO_DATE if data.firmware_update else None
+        ),
+        exists_fn=lambda data: data.firmware_update is not None,
+        attrs_fn=lambda data: {
+            "update_state": (data.firmware_update or {}).get("state"),
+            "installed_version": data.system.get("firmware_version"),
+        },
     ),
 )
 
@@ -71,6 +90,12 @@ class FreeboxBinarySensor(FreeboxEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool | None:
         return self.entity_description.value_fn(self.coordinator.data)
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        if self.entity_description.attrs_fn is None:
+            return None
+        return self.entity_description.attrs_fn(self.coordinator.data)
 
 
 class FreeboxPortLinkSensor(FreeboxPortEntity, BinarySensorEntity):

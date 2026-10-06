@@ -72,6 +72,7 @@ L'intégration crée quatre types d'appareils :
   - en diagnostic :
     - **Signal fibre**, **Puissance optique reçue** et **Puissance optique émise** (en dBm, sur la fibre uniquement) ;
     - **Démarrée le** : heure du dernier démarrage de la box ;
+    - **Mise à jour du firmware** : activé quand une mise à jour du firmware attend d'être installée (au prochain redémarrage), avec la version installée ;
     - températures et ventilateur, avec les noms donnés par la box ;
     - pour chaque port Ethernet et le port SFP : **lien**, **vitesse** et **données reçues / envoyées** ;
     - **Appels manqués** et **Marquer les appels comme lus** (bouton).

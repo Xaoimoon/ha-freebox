@@ -41,6 +41,7 @@ def make_api() -> AsyncMock:
     api.get_lan_hosts.return_value = result("lan_browser_pub")
     api.get_call_log.return_value = result("call_log")
     api.get_wifi_config.return_value = result("wifi_config")
+    api.get_firmware_update.return_value = result("update")
     return api
 
 
@@ -58,6 +59,7 @@ async def test_full_snapshot():
     assert list(data.disks) == [1000]
     assert data.calls and data.calls[0]["type"] == "missed"
     assert data.wifi == {"enabled": False, "power_saving": True, "mac_filter_state": "disabled"}
+    assert data.firmware_update == {"state": "up_to_date"}
     # `wifiguest` est vide (host_count 0) : pas interrogé.
     api.get_lan_hosts.assert_awaited_once_with("pub")
 
@@ -99,6 +101,20 @@ async def test_bridge_mode_has_no_hosts():
     data = await coordinator._async_update_data()
     assert data.hosts == {}
     assert coordinator.supports_hosts is False
+
+
+@pytest.mark.asyncio
+async def test_missing_update_endpoint_is_no_longer_polled():
+    api = make_api()
+    api.get_firmware_update.side_effect = FreeboxApiError("x", "invalid_request")
+    coordinator = make_coordinator(api)
+
+    data = await coordinator._async_update_data()
+    assert data.firmware_update is None
+    assert coordinator.supports_firmware_update is False
+
+    await coordinator._async_update_data()
+    assert api.get_firmware_update.await_count == 1
 
 
 @pytest.mark.asyncio

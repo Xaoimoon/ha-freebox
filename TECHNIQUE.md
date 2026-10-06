@@ -68,6 +68,7 @@ En HTTPS, la Freebox présente un certificat signé par l'autorité de Free : la
 | `wifi/config/` | Wi-Fi global : `enabled` (PUT pour l'activer ou le couper) | **vérifié** |
 | `network_control/` | Profils de contrôle parental : `current_mode`, `rule_mode`, `override*`, `next_change`, appareils (`hosts`) | **vérifié** ; le PUT exige le profil complet (voir ci-dessous) |
 | `ws/event` | WebSocket d'événements (`register` puis notifications `lan_host_l3addr_reachable/unreachable`…) | **vérifié**, non utilisé : un événement par adresse IPv4/IPv6, très bavard |
+| `update/` | État de la mise à jour du firmware : `{"state": "up_to_date"}` | **vérifié** le 2026-10-06 ; **non documenté**, absent du bundle Freebox OS : les autres valeurs de `state` sont inconnues, toutes traitées comme « mise à jour en attente » |
 | `home/` | Domotique (alarme, capteurs) | **absent : 404 (vérifié le 2026-10-05)**, propre à la Delta |
 
 ### Contrôle parental

@@ -113,6 +113,21 @@ async def test_connection_entities():
 
 
 @pytest.mark.asyncio
+async def test_firmware_update_entity():
+    data = make_data(firmware_update={"state": "up_to_date"})
+    update = (await setup(binary_sensor, data))["firmware_update"]
+    assert update.is_on is False
+    assert update.extra_state_attributes == {"update_state": "up_to_date", "installed_version": "4.12.3"}
+
+    # États non documentés : tout ce qui n'est pas `up_to_date` est une mise à jour en attente.
+    data.firmware_update = {"state": "downloading"}
+    assert update.is_on is True
+    assert update.extra_state_attributes["update_state"] == "downloading"
+
+    assert "firmware_update" not in await setup(binary_sensor, make_data(firmware_update=None))
+
+
+@pytest.mark.asyncio
 async def test_no_fiber_entities_outside_ftth():
     data = make_data(ftth=None)
     assert "ftth_signal" not in await setup(binary_sensor, data)

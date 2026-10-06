@@ -44,6 +44,17 @@
       "ftth_signal": {
         "name": "Fiber signal"
       },
+      "firmware_update": {
+        "name": "Firmware update",
+        "state_attributes": {
+          "update_state": {
+            "name": "Update state"
+          },
+          "installed_version": {
+            "name": "Installed version"
+          }
+        }
+      },
       "port_link": {
         "name": "{port} link",
         "state_attributes": {
