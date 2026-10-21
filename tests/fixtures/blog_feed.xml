@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>L&#039;actualité de la Freebox</title>
+	<atom:link href="https://dev.freebox.fr/blog/?feed=rss2" rel="self" type="application/rss+xml" />
+	<link>https://dev.freebox.fr/blog</link>
+	<description>L&#039;actualité de la Freebox</description>
+	<lastBuildDate>Mon, 12 Oct 2026 10:30:22 +0000</lastBuildDate>
+	<language>fr-FR</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.7.14</generator>
+	<item>
+		<title>Mise à jour du répéteur Wifi 2.9.3</title>
+		<link>https://dev.freebox.fr/blog/?p=22554</link>
+		
+		<dc:creator><![CDATA[Nicolas Escande]]></dc:creator>
+		<pubDate>Mon, 12 Oct 2026 10:30:22 +0000</pubDate>
+				<category><![CDATA[Mise à jour]]></category>
+		<category><![CDATA[Répéteur Wifi]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22554</guid>
+
+					<description><![CDATA[La mise à jour 2.9.3 est disponible en ligne depuis le 12 octobre 2026 Les mises à jour sont normalement automatiques au redémarrage du Freebox Server, sinon il suffit de redémarrer vos répéteurs. Corrections: Résolution d&#8217;un problème rare enchantement de démarrer la carte wifi 5GHz Correctifs de sécurité]]></description>
+										<content:encoded><![CDATA[<p>La mise à jour 2.9.3 est disponible en ligne depuis le 12 octobre 2026<br />
+Les mises à jour sont normalement automatiques au redémarrage du Freebox Server, sinon il suffit de redémarrer vos répéteurs.</p>
+<h3>Corrections:</h3>
+<ul>
+<li>Résolution d&rsquo;un problème rare enchantement de démarrer la carte wifi 5GHz</li>
+<li><span data-teams="true">Correctifs de sécurité</span></li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du répéteur Wifi 2.9.1</title>
+		<link>https://dev.freebox.fr/blog/?p=22546</link>
+		
+		<dc:creator><![CDATA[Nicolas Escande]]></dc:creator>
+		<pubDate>Mon, 21 Sep 2026 08:50:20 +0000</pubDate>
+				<category><![CDATA[Mise à jour]]></category>
+		<category><![CDATA[Répéteur Wifi]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22546</guid>
+
+					<description><![CDATA[La mise à jour 2.9.1 est disponible en ligne depuis le 21 septembre 2026 Les mises à jour sont normalement automatiques au redémarrage du Freebox Server, sinon il suffit de redémarrer vos répéteurs. Corrections: Correctifs de sécurité]]></description>
+										<content:encoded><![CDATA[<p>La mise à jour 2.9.1 est disponible en ligne depuis le 21 septembre 2026<br />
+Les mises à jour sont normalement automatiques au redémarrage du Freebox Server, sinon il suffit de redémarrer vos répéteurs.</p>
+<h3>Corrections:</h3>
+<ul>
+<li><span data-teams="true">Correctifs de sécurité</span></li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server 4.13.1</title>
+		<link>https://dev.freebox.fr/blog/?p=22548</link>
+		
+		<dc:creator><![CDATA[Nicolas Escande]]></dc:creator>
+		<pubDate>Mon, 21 Sep 2026 08:50:14 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22548</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 21 septembre à 10h00. Pour en profiter, veuillez redémarrer le Freebox Server. Ils doivent se mettre à jour automatiquement lors de la mise à jour du Freebox server Corrections: Problème rare de sélection de lien des Répéteurs Wifi vers le Freebox Server Correctifs de sécurité]]></description>
+										<content:encoded><![CDATA[
+<p>La mise à jour est disponible depuis le 21 septembre à 10h00. Pour en profiter, veuillez redémarrer le Freebox Server. Ils doivent se mettre à jour automatiquement lors de la mise à jour du Freebox server</p>
+<h2>Corrections:</h2>
+<ul>
+<li>Problème rare de sélection de lien des Répéteurs Wifi vers le Freebox Server</li>
+<li><span data-teams="true">Correctifs de sécurité</span></li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Support des canaux DFS</title>
+		<link>https://dev.freebox.fr/blog/?p=22530</link>
+		
+		<dc:creator><![CDATA[Nicolas Escande]]></dc:creator>
+		<pubDate>Wed, 16 Sep 2026 11:52:18 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Répéteur Wifi]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22530</guid>
+
+					<description><![CDATA[Évolution du support des canaux DFS Les canaux DFS occupent une partie de la bande Wi-Fi 5 GHz partagée avec des systèmes prioritaires, notamment les radars météo. Leur utilisation impose une vérification de l’absence de radar avant émission (CAC) et un changement de canal si un radar est détecté (CSA). Ces canaux, généralement moins encombrés, [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p><strong>Évolution du support des canaux DFS</strong></p>
+<p>Les canaux DFS occupent une partie de la bande Wi-Fi 5 GHz partagée avec des systèmes prioritaires, notamment les radars météo.<br />
+Leur utilisation impose une vérification de l’absence de radar avant émission (CAC) et un changement de canal si un radar est détecté (CSA).<br />
+Ces canaux, généralement moins encombrés, permettent d’utiliser une largeur de bande de 160 MHz au lieu de 80 MHz et, selon le canal, une puissance d’émission plus élevée.<br />
+Cela a pour bénéfice de pouvoir théoriquement doubler le débit et améliorer légèrement la portée.</p>
+<p><strong>Jusqu’à présent</strong></p>
+<ul>
+<li>Les Freebox prenaient déjà en charge les canaux DFS, mais leur utilisation était désactivée en présence d’un répéteur.</li>
+<li>Après une détection radar, le Wi-Fi basculait sur un canal non DFS, sans retour automatique sur le canal initial.</li>
+</ul>
+<p><strong>Ce qui change</strong></p>
+<ul>
+<li>Les canaux DFS sont désormais utilisables même en présence de répéteurs.</li>
+<li>Le Wi-Fi revient automatiquement sur un canal DFS lorsque les conditions le permettent.</li>
+<li>Les changements de canaux, automatiques ou manuels devraient désormais être sans interruption.</li>
+</ul>
+<p><strong>À savoir :</strong> la vérification préalable de l’absence de radar (CAC) peut allonger de 60 secondes le démarrage du Wi-Fi 5 GHz.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server 4.13.0</title>
+		<link>https://dev.freebox.fr/blog/?p=22529</link>
+		
+		<dc:creator><![CDATA[Nicolas Escande]]></dc:creator>
+		<pubDate>Wed, 16 Sep 2026 11:52:07 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22529</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 16 septembre à 13h00. Pour en profiter, veuillez redémarrer le Freebox Server.Cette mise à jour va de pair avec la mise à jour des répéteur en version 2.9.0.Ils doivent se mettre à jour automatiquement lors de la mise à jour du Freebox server Nouveautés Utilisation du CSA [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>La mise à jour est disponible depuis le 16 septembre à 13h00. Pour en profiter, veuillez redémarrer le Freebox Server.<br />Cette mise à jour va de pair avec la mise à jour des répéteur en version 2.9.0.<br />Ils doivent se mettre à jour automatiquement lors de la mise à jour du Freebox server</p>
+<h2>Nouveautés</h2>
+<ul>
+<li>Utilisation du CSA lors du changement de canal wifi pour minimiser les coupures aux appareil connectés</li>
+<li>Changements profonds sur la gestion des canaux wifi DFS en 5GHz.<br />Voir l&rsquo;article dédié pour plus d&rsquo;informations.</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du répéteur Wifi 2.9.0</title>
+		<link>https://dev.freebox.fr/blog/?p=22535</link>
+		
+		<dc:creator><![CDATA[Nicolas Escande]]></dc:creator>
+		<pubDate>Wed, 16 Sep 2026 11:52:03 +0000</pubDate>
+				<category><![CDATA[Mise à jour]]></category>
+		<category><![CDATA[Répéteur Wifi]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22535</guid>
+
+					<description><![CDATA[La mise à jour 2.9.0 est disponible en ligne depuis le 16 septembre 2026 Elle fonctionne de paire avec la mise à jour des Freebox Server 4.13.0 Les mises à jour sont normalement automatiques au redémarrage du Freebox Server, sinon il suffit de redémarrer vos répéteurs. Changements: Support des canaux DFS sur les Freebox Server [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>La mise à jour 2.9.0 est disponible en ligne depuis le 16 septembre 2026<br />
+Elle fonctionne de paire avec la mise à jour des Freebox Server 4.13.0<br />
+Les mises à jour sont normalement automatiques au redémarrage du Freebox Server, sinon il suffit de redémarrer vos répéteurs.</p>
+<h3>Changements:</h3>
+<ul>
+<li>Support des canaux DFS sur les Freebox Server compatibles (version 4.13.0 minimum)<br />
+Voir l&rsquo;article dédié pour plus d&rsquo;informations.</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Pop) 4.12.4.1</title>
+		<link>https://dev.freebox.fr/blog/?p=22526</link>
+		
+		<dc:creator><![CDATA[mbizon]]></dc:creator>
+		<pubDate>Wed, 09 Sep 2026 14:11:46 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22526</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 09 septembre à 16h00. Pour en profiter, veuillez redémarrer le Freebox Server. Attention, tous les modèles de Freebox Pop ne sont pas concernés, il n&#8217;est pas anormal que votre Freebox Pop ne se mette pas à jour. Corrections Reconnexion automatique après perte du signal fibre aléatoirement non [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>La mise à jour est disponible depuis le 09 septembre à 16h00. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<p>Attention, tous les modèles de Freebox Pop ne sont pas concernés, il n&rsquo;est pas anormal que votre Freebox Pop ne se mette pas à jour.</p>
+<h2>Corrections</h2>
+<ul>
+<li>
+<p class="summary severity2">Reconnexion automatique après perte du signal fibre aléatoirement non fonctionnelle.</p>
+</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.12.4</title>
+		<link>https://dev.freebox.fr/blog/?p=22509</link>
+		
+		<dc:creator><![CDATA[lduboin]]></dc:creator>
+		<pubDate>Thu, 03 Sep 2026 08:15:27 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22509</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 03 septembre à 10h00. Pour en profiter, veuillez redémarrer le Freebox Server. Améliorations Il est maintenant possible de configurer le domaine utilisé pour joindre les appareils connectés au réseau local (FS#41048) Corrections Trafic vers les appareils connectés en Wi-Fi non comptabilisé dans les compteurs de débit de [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>La mise à jour est disponible depuis le 03 septembre à 10h00. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h2>Améliorations</h2>
+<ul>
+<li>Il est maintenant possible de configurer le domaine utilisé pour joindre les appareils connectés au réseau local (FS#41048)</li>
+</ul>
+<h2>Corrections</h2>
+<ul>
+<li>
+<p class="summary severity2">Trafic vers les appareils connectés en Wi-Fi non comptabilisé dans les compteurs de débit de FreeboxOS sur certaines Freebox Pop. (FS#41117)</p>
+</li>
+<li>
+<p class="summary severity2">Appareils connectés au réseau Wi-Fi invité impossibles à oublier dans la fenêtre &laquo;&nbsp;Périphériques Réseau&nbsp;&raquo; de FreeboxOS (FS#41108)</p>
+</li>
+<li>
+<p class="summary severity5">Préfixe réseau invalide dans la fenêtre &laquo;&nbsp;Périphériques Réseau&nbsp;&raquo; après avoir changé l&rsquo;adresse IP de la Freebox sur le réseau local (FS#41101, FS#41107)</p>
+</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.12.3</title>
+		<link>https://dev.freebox.fr/blog/?p=22502</link>
+		
+		<dc:creator><![CDATA[Nicolas Escande]]></dc:creator>
+		<pubDate>Thu, 23 Jul 2026 07:23:37 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22502</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 23 juillet à 8h00. Pour en profiter, veuillez redémarrer le Freebox Server. Corrections Dans de très rares occasions, les cartes Wi-Fi 5 GHz pouvaient rester en mode DFS pour une durée anormalement longue. Icônes manquantes dans le journal d&#8217;appel téléphonique (FS#41097)]]></description>
+										<content:encoded><![CDATA[<p>La mise à jour est disponible depuis le 23 juillet à 8h00. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h2>Corrections</h2>
+<ul>
+<li>Dans de très rares occasions, les cartes Wi-Fi 5 GHz pouvaient rester en mode DFS pour une durée anormalement longue.</li>
+<li>Icônes manquantes dans le journal d&rsquo;appel téléphonique (FS#41097)</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.12.2</title>
+		<link>https://dev.freebox.fr/blog/?p=22498</link>
+		
+		<dc:creator><![CDATA[mbizon]]></dc:creator>
+		<pubDate>Fri, 03 Jul 2026 08:51:34 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22498</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 03 juillet à 10h30. Pour en profiter, veuillez redémarrer le Freebox Server. Améliorations Ajout de l&#8217;option nom de domaine (15) au serveur dhcp (FS#41048) Corrections SSID affiché invalide sur la page WPS (FS#41063) Défaut aléatoire de reconnexion automatique lorsque le backup 4G perd le signal. Correctifs de [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>La mise à jour est disponible depuis le 03 juillet à 10h30. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h2>Améliorations</h2>
+<ul>
+<li><span data-teams="true">Ajout de l&rsquo;option nom de domaine (15) au serveur dhcp (FS#41048)</span></li>
+</ul>
+<h2>Corrections</h2>
+<ul>
+<li><span data-teams="true">SSID affiché invalide sur la page WPS (FS#41063)</span></li>
+<li><span data-teams="true">Défaut aléatoire de reconnexion automatique lorsque le backup 4G perd le signal.</span></li>
+<li><span data-teams="true">Correctifs de sécurité</span></li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Delta/Ultra) 4.12.1.1</title>
+		<link>https://dev.freebox.fr/blog/?p=22492</link>
+		
+		<dc:creator><![CDATA[mbizon]]></dc:creator>
+		<pubDate>Thu, 11 Jun 2026 10:58:14 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22492</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 11 juin à 13h00. Pour en profiter, veuillez redémarrer le Freebox Server. Corrections Disques RAID non visibles sur Freebox Delta &#038; Ultra]]></description>
+										<content:encoded><![CDATA[
+<p>La mise à jour est disponible depuis le 11 juin à 13h00. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h2>Corrections</h2>
+<ul>
+<li><span data-teams="true">Disques RAID non visibles sur Freebox Delta &#038; Ultra</span></li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.12.1</title>
+		<link>https://dev.freebox.fr/blog/?p=22484</link>
+		
+		<dc:creator><![CDATA[Nicolas Escande]]></dc:creator>
+		<pubDate>Wed, 10 Jun 2026 14:44:58 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22484</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 10 juin à 16h30. Pour en profiter, veuillez redémarrer le Freebox Server. Nouveautés Ajout d&#8217;un nouveau mode de steering Wi-Fi expérimental dans Freebox OS, section &#171;&#160;Settings avancés / Wifi / Steering Wi-Fi&#160;&#187;.En plus du support existant pour les appareils compatibles 802.11k/v, ce mode vise à optimiser aussi [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>La mise à jour est disponible depuis le 10 juin à 16h30. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h2>Nouveautés</h2>
+<ul>
+<li><span data-teams="true">Ajout d&rsquo;un nouveau mode de steering Wi-Fi expérimental dans Freebox OS, section &laquo;&nbsp;Settings avancés / Wifi / Steering Wi-Fi&nbsp;&raquo;.<br />En plus du support existant pour les appareils compatibles 802.11k/v, ce mode vise à optimiser aussi la connexion des appareils qui ne le sont pas en les orientant vers le meilleur point d&rsquo;accès / bande.</span></li>
+</ul>
+<h2>Corrections</h2>
+<ul>
+<li><span data-teams="true">Contournement d&rsquo;un bug empêchant certains smartphones Google Pixel en version Android 17 de se connecter en WPA3 Compatibilité (FS#40968)</span></li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.11.1</title>
+		<link>https://dev.freebox.fr/blog/?p=22464</link>
+		
+		<dc:creator><![CDATA[lduboin]]></dc:creator>
+		<pubDate>Wed, 20 May 2026 13:25:28 +0000</pubDate>
+				<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22464</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 20 mai à 15h30. Pour en profiter, veuillez redémarrer le Freebox Server. Nouveautés Un nom de domaine est maintenant associé automatiquement à chaque périphérique réseau (FS#4079, FS#18142) Il est maintenant possible de créer des routes statiques vers toutes les addresses IP privées (FS#12869) Corrections DMZ étant toujours [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>La mise à jour est disponible depuis le 20 mai à 15h30. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h2>Nouveautés</h2>
+<ul>
+<li>Un nom de domaine est maintenant associé automatiquement à chaque périphérique réseau (FS#4079, FS#18142)</li>
+<li>Il est maintenant possible de créer des routes statiques vers toutes les addresses IP privées (FS#12869)</li>
+</ul>
+<h2>Corrections</h2>
+<ul>
+<li>DMZ étant toujours considérée désactivée lors de la configuration</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.10.2</title>
+		<link>https://dev.freebox.fr/blog/?p=22478</link>
+		
+		<dc:creator><![CDATA[mbizon]]></dc:creator>
+		<pubDate>Wed, 13 May 2026 14:36:34 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22478</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 13 mai à 16h30. Pour en profiter, veuillez redémarrer le Freebox Server. Corrections Affichage incorrect de la version de Freebox OS Correctifs de sécurité]]></description>
+										<content:encoded><![CDATA[<p>La mise à jour est disponible depuis le 13 mai à 16h30. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h2>Corrections</h2>
+<ul>
+<li>Affichage incorrect de la version de Freebox OS</li>
+<li>Correctifs de sécurité</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.10.1</title>
+		<link>https://dev.freebox.fr/blog/?p=22462</link>
+		
+		<dc:creator><![CDATA[lduboin]]></dc:creator>
+		<pubDate>Wed, 06 May 2026 13:01:08 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22462</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 06 mai à 15h00. Pour en profiter, veuillez redémarrer le Freebox Server. Nouveautés Il est maintenant possible de configurer des routes statiques depuis freeboxos (FS#12869, FS#38922, FS#39957)]]></description>
+										<content:encoded><![CDATA[<p>La mise à jour est disponible depuis le 06 mai à 15h00. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h2>Nouveautés</h2>
+<ul>
+<li>Il est maintenant possible de configurer des routes statiques depuis freeboxos (FS#12869, FS#38922, FS#39957)</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.9.19</title>
+		<link>https://dev.freebox.fr/blog/?p=22454</link>
+		
+		<dc:creator><![CDATA[lduboin]]></dc:creator>
+		<pubDate>Mon, 27 Apr 2026 12:12:35 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22454</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 27 avril à 14h00. Pour en profiter, veuillez redémarrer le Freebox Server. Corrections Les requêtes vers les serveurs DNS Free IPv6 fonctionnent à nouveau en mode bridge (FS#40869)]]></description>
+										<content:encoded><![CDATA[
+<p>La mise à jour est disponible depuis le 27 avril à 14h00. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h2>Corrections</h2>
+<ul>
+<li>Les requêtes vers les serveurs DNS Free IPv6 fonctionnent à nouveau en mode bridge (FS#40869)</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.9.18.1</title>
+		<link>https://dev.freebox.fr/blog/?p=22425</link>
+		
+		<dc:creator><![CDATA[lduboin]]></dc:creator>
+		<pubDate>Thu, 26 Mar 2026 17:46:53 +0000</pubDate>
+				<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22425</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 26 mars à 18h30. Pour en profiter, veuillez redémarrer le Freebox Server. Corrections Problème de stabilité pouvant rendre certaines fonctionnalités de FreeboxOS inaccessibles (périphériques réseau, ajout de redirection de port, &#8230;) Problème d&#8217;accès SMB depuis certains clients Windows (FS#40893)]]></description>
+										<content:encoded><![CDATA[
+<p>La mise à jour est disponible depuis le 26 mars à 18h30. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h2>Corrections</h2>
+<ul>
+<li>Problème de stabilité pouvant rendre certaines fonctionnalités de FreeboxOS inaccessibles (périphériques réseau, ajout de redirection de port, &#8230;)</li>
+<li>Problème d&rsquo;accès SMB depuis certains clients Windows (FS#40893)</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.9.18</title>
+		<link>https://dev.freebox.fr/blog/?p=22423</link>
+		
+		<dc:creator><![CDATA[lduboin]]></dc:creator>
+		<pubDate>Wed, 25 Mar 2026 15:04:48 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22423</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 25 mars à 14h00. Pour en profiter, veuillez redémarrer le Freebox Server. Ajouts Un nouvel onglet &#171;&#160;Détails&#160;&#187; a été ajouté à la fenêtre d&#8217;information des périphériques réseau, contenant des informations plus techniques que celles déjà présentes dans l&#8217;onglet &#171;&#160;Noms&#160;&#187;. Ces dernières peuvent être utilisées afin d&#8217;identifier précisément [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>La mise à jour est disponible depuis le 25 mars à 14h00. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h3>Ajouts</h3>
+<ul>
+<li>Un nouvel onglet &laquo;&nbsp;Détails&nbsp;&raquo; a été ajouté à la fenêtre d&rsquo;information des périphériques réseau, contenant des informations plus techniques que celles déjà présentes dans l&rsquo;onglet &laquo;&nbsp;Noms&nbsp;&raquo;. Ces dernières peuvent être utilisées afin d&rsquo;identifier précisément un appareil.</li>
+</ul>
+<ul>
+<li>Afin d&rsquo;augmenter la durée de vie de l&rsquo;afficheur, une fonction de mise en veille est maintenant disponible pour la Freebox Revolution et Mini 4k. La fonction est configurable depuis les menus de l&rsquo;afficheur.</li>
+</ul>
+<h2>Corrections</h2>
+<ul>
+<li>Correction d&rsquo;un bug empêchant la lecture des enregistrements de plus 2Go sur la Freebox Révolution.</li>
+<li>Correction d&rsquo;un bug empêchant l&rsquo;accès à la liste des fichiers du disque dur.</li>
+</ul>
+<p></p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.9.17</title>
+		<link>https://dev.freebox.fr/blog/?p=22408</link>
+		
+		<dc:creator><![CDATA[mbizon]]></dc:creator>
+		<pubDate>Thu, 12 Mar 2026 14:25:11 +0000</pubDate>
+				<category><![CDATA[Freebox Server]]></category>
+		<category><![CDATA[Mise à jour]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22408</guid>
+
+					<description><![CDATA[La mise à jour est disponible depuis le 12 mars à 15h00. Pour en profiter, veuillez redémarrer le Freebox Server. Corrections Correction d&#8217;un bug permettant à des appareil supplémentaires de se connecter avec une clef wifi invité même si le nombre maximal d&#8217;utilisateur était atteint]]></description>
+										<content:encoded><![CDATA[<p>La mise à jour est disponible depuis le 12 mars à 15h00. Pour en profiter, veuillez redémarrer le Freebox Server.</p>
+<h3>Corrections</h3>
+<ul>
+<li>Correction d&rsquo;un bug permettant à des appareil supplémentaires de se connecter avec une clef wifi invité même si le nombre maximal d&rsquo;utilisateur était atteint</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Mise à jour du répéteur Wifi 2.7.13</title>
+		<link>https://dev.freebox.fr/blog/?p=22394</link>
+		
+		<dc:creator><![CDATA[Nicolas Escande]]></dc:creator>
+		<pubDate>Wed, 18 Feb 2026 14:42:27 +0000</pubDate>
+				<category><![CDATA[Mise à jour]]></category>
+		<category><![CDATA[Répéteur Wifi]]></category>
+		<guid isPermaLink="false">https://dev.freebox.fr/blog/?p=22394</guid>
+
+					<description><![CDATA[La mise à jour 2.7.13 est disponible en ligne depuis le 18 février 2026 Les mises à jour sont normalement automatiques au redémarrage du Freebox Server, sinon il suffit de redémarrer vos répéteurs. Changements: Correction de problème d&#8217;application de la configuration Wifi dans des installations avec clefs invités et un grand nombre d&#8217;appareil associés Correction de [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>La mise à jour 2.7.13 est disponible en ligne depuis le 18 février 2026<br />
+Les mises à jour sont normalement automatiques au redémarrage du Freebox Server, sinon il suffit de redémarrer vos répéteurs.</p>
+<h3>Changements:</h3>
+<ul>
+<li>Correction de problème d&rsquo;application de la configuration Wifi dans des installations avec clefs invités et un grand nombre d&rsquo;appareil associés</li>
+<li>Correction de divers autres problèmes mineurs de stabilité</li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

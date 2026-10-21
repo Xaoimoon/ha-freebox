@@ -43,9 +43,12 @@ CALL_LOG_MARK_READ_ENDPOINT = "call/log/mark_all_as_read/"
 SYSTEM_REBOOT_ENDPOINT = "system/reboot/"
 NETWORK_CONTROL_ENDPOINT = "network_control/"
 # Non documenté (absent de l'API publique et du bundle Freebox OS) : `state`
-# vaut `up_to_date` quand aucune mise à jour du firmware n'est en attente.
+# vaut `up_to_date` hors installation. Il ne dit pas qu'une version plus récente
+# existe : la box ne la cherche qu'à son redémarrage (voir releases.py).
 UPDATE_ENDPOINT = "update/"
-UPDATE_STATE_UP_TO_DATE = "up_to_date"
+
+# Flux RSS du blog de Free, qui annonce chaque version du Freebox Server.
+RELEASES_FEED_URL = "https://dev.freebox.fr/blog/?feed=rss2"
 
 # Modes d'accès d'un profil de contrôle parental (`webonly` : ancien mode,
 # que Freebox OS n'accepte plus en écriture).

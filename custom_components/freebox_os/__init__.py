@@ -8,7 +8,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
-from homeassistant.helpers import config_validation as cv, device_registry as dr
+from homeassistant.helpers import config_validation as cv, device_registry as dr, entity_registry as er
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.typing import ConfigType
 
@@ -23,6 +23,7 @@ from .const import APP_ID, CONF_APP_TOKEN, DOMAIN  # noqa: F401
 from .coordinator import FreeboxDataUpdateCoordinator
 from .entity import router_device_info
 from .parental import profile_identifier
+from .releases import FreeboxReleasesCoordinator
 from .services import async_setup_services
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
@@ -33,6 +34,7 @@ PLATFORMS: list[Platform] = [
     Platform.DEVICE_TRACKER,
     Platform.SENSOR,
     Platform.SWITCH,
+    Platform.UPDATE,
 ]
 
 
@@ -40,6 +42,8 @@ PLATFORMS: list[Platform] = [
 class FreeboxRuntimeData:
     api: FreeboxApiClient
     coordinator: FreeboxDataUpdateCoordinator
+    # Versions publiées par Free (blog dev.freebox.fr).
+    releases: FreeboxReleasesCoordinator
     # Id de l'appareil box dans le registre, auquel les disques se rattachent.
     router_device_id: str
 
@@ -80,8 +84,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: FreeboxConfigEntry) -> b
         **router_device_info(coordinator.data.system, f"http://{host}:{port}/"),
     )
 
+    # Hors du premier relevé bloquant : sans Internet, la box reste gérable et
+    # l'entité de mise à jour attend la prochaine lecture du blog.
+    releases = FreeboxReleasesCoordinator(hass, entry)
+    await releases.async_refresh()
+
+    # v0.7.0 : le capteur binaire de mise à jour du firmware devient une entité `update`.
+    entity_registry = er.async_get(hass)
+    old_entity_id = entity_registry.async_get_entity_id(
+        "binary_sensor", DOMAIN, f"{coordinator.data.system['mac']} firmware_update"
+    )
+    if old_entity_id:
+        entity_registry.async_remove(old_entity_id)
+
     entry.runtime_data = FreeboxRuntimeData(
-        api=api, coordinator=coordinator, router_device_id=router.id
+        api=api, coordinator=coordinator, releases=releases, router_device_id=router.id
     )
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True

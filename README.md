@@ -18,9 +18,10 @@ Intégration Home Assistant (non officielle) pour les Freebox. Elle dialogue en 
 - Contrôle parental : couper ou rétablir Internet pour chaque profil de Freebox OS, pour une durée ou jusqu'à nouvel ordre.
 - Ports Ethernet de la box : lien, vitesse et trafic de chaque port.
 - État de la box : températures, ventilateur, heure de démarrage, espace disque ; redémarrage et Wi-Fi.
+- Mise à jour du firmware : signalée dans Home Assistant dès que Free publie une nouvelle version.
 - Appels manqués sur la ligne fixe.
 - Présence des appareils du réseau local.
-- Fonctionnement 100 % local : ni compte en ligne, ni cloud.
+- Fonctionnement local : ni compte en ligne, ni cloud. Seule exception, la liste des versions du firmware, lue sur le blog de Free (voir ci-dessous).
 
 ## Installation
 
@@ -72,7 +73,7 @@ L'intégration crée quatre types d'appareils :
   - en diagnostic :
     - **Signal fibre**, **Puissance optique reçue** et **Puissance optique émise** (en dBm, sur la fibre uniquement) ;
     - **Démarrée le** : heure du dernier démarrage de la box ;
-    - **Mise à jour du firmware** : activé quand une mise à jour du firmware attend d'être installée (au prochain redémarrage), avec la version installée ;
+    - **Firmware** (entité de mise à jour) : version installée sur la box et dernière version publiée par Free pour ce modèle, avec ses notes de version. La box ne cherche une nouvelle version qu'en redémarrant : la mise à jour s'installe donc en redémarrant la box, pas depuis Home Assistant. La dernière version est lue toutes les 6 heures sur le blog de Free ([dev.freebox.fr/blog](https://dev.freebox.fr/blog/)) ;
     - températures et ventilateur, avec les noms donnés par la box ;
     - pour chaque port Ethernet et le port SFP : **lien**, **vitesse** et **données reçues / envoyées** ;
     - **Appels manqués** et **Marquer les appels comme lus** (bouton).

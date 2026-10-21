@@ -17,7 +17,10 @@ dans le code.
   en FTTH, ports du switch et leurs compteurs, disques, appareils du LAN, appels, Wi-Fi,
   profils de contrôle parental). Une lecture refusée faute de droit (`insufficient_rights`)
   désactive la partie concernée jusqu'au prochain chargement, sans faire échouer le relevé.
-- Plateformes `sensor`, `binary_sensor`, `switch`, `button`, `device_tracker` ; `parental.py`
+- `releases.py` : dernière version du firmware publiée par Free, lue toutes les 6 h dans le flux
+  RSS du blog (voir « Mise à jour du firmware »). Un échec garde la dernière liste connue et ne
+  bloque pas le chargement de l'intégration.
+- Plateformes `sensor`, `binary_sensor`, `switch`, `button`, `device_tracker`, `update` ; `parental.py`
   regroupe les appareils et entités des profils de contrôle parental (ajoutés à la volée),
   `services.py` les actions `block_internet` / `allow_internet` / `resume_schedule`.
 
@@ -68,7 +71,7 @@ En HTTPS, la Freebox présente un certificat signé par l'autorité de Free : la
 | `wifi/config/` | Wi-Fi global : `enabled` (PUT pour l'activer ou le couper) | **vérifié** |
 | `network_control/` | Profils de contrôle parental : `current_mode`, `rule_mode`, `override*`, `next_change`, appareils (`hosts`) | **vérifié** ; le PUT exige le profil complet (voir ci-dessous) |
 | `ws/event` | WebSocket d'événements (`register` puis notifications `lan_host_l3addr_reachable/unreachable`…) | **vérifié**, non utilisé : un événement par adresse IPv4/IPv6, très bavard |
-| `update/` | État de la mise à jour du firmware : `{"state": "up_to_date"}` | **vérifié** le 2026-10-06 ; **non documenté**, absent du bundle Freebox OS : les autres valeurs de `state` sont inconnues, toutes traitées comme « mise à jour en attente » |
+| `update/` | `{"state": "up_to_date"}` | **vérifié** le 2026-10-06 ; **non documenté**, absent du bundle Freebox OS. Ne signale **pas** une version publiée : le 2026-10-21, box en 4.12.3, 4.13.1 publiée depuis un mois, réponse `up_to_date`. Exposé seulement en attribut (`box_update_state`) |
 | `home/` | Domotique (alarme, capteurs) | **absent : 404 (vérifié le 2026-10-05)**, propre à la Delta |
 
 ### Contrôle parental
@@ -81,6 +84,25 @@ d'adresses MAC manquante ») : il faut renvoyer `profile_name`, `profile_icon`,
 `override_mode`, `current_mode`, `override_until`, `override`, `macs` et `cdayranges`. À
 l'échéance d'une pause, la box repasse d'elle-même `override` à false (**vérifié** sur une
 pause d'une minute).
+
+### Mise à jour du firmware
+
+La box ne cherche pas de nouveau firmware tant qu'elle tourne : elle télécharge et installe la
+dernière version au redémarrage du Freebox Server (les notes de version de Free le disent :
+« Pour en profiter, veuillez redémarrer le Freebox Server »). L'API locale ne connaît donc pas
+la dernière version publiée : ni l'interface Freebox OS (seuls `system/`, `system/reboot/` et
+`system/shutdown` dans le bundle) ni les chemins essayés le 2026-10-21 (`update/info/`,
+`update/status/`, `update/config/`, `system/update/`, `system/upgrade/`, `system/firmware/` :
+404 ; `upgrade/`, `firmware/` : version d'API inconnue).
+
+La source est le flux RSS du blog de Free, `https://dev.freebox.fr/blog/?feed=rss2` (20
+dernières annonces, répéteur Wifi compris). Les titres des mises à jour du Server :
+`Mise à jour du Freebox Server 4.13.1` (tous les modèles) ou
+`Mise à jour du Freebox Server (Revolution/Pop/Delta/Ultra) 4.12.4` (modèles listés ; la
+4.12.4.1 était réservée à la Pop). Le nom commercial vient de `model_info.name` :
+`fbxgw9` = Ultra (vérifié), `fbxgw8` = Pop, `fbxgw7` = Delta, `fbxgw6` = Revolution
+(supposés). Un modèle inconnu ne retient que les annonces sans liste de modèles. Le flux par
+catégorie (`category_name=freebox-server`) est vide : on lit le flux complet.
 
 ### Inventaire
 
